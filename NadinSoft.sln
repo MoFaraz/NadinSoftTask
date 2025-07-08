@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{80DE306A-F103-4F61-B387-22ACA7224999}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ED80B959-4D4C-4757-BA7F-5FB1F43EF584}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.Domain", "src\Core\NadinSoft.Domain\NadinSoft.Domain\NadinSoft.Domain.csproj", "{50DA47FB-445B-497A-8EFA-63FCAA8058F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.Domain.Test", "src\Tests\NadinSoft.Domain.Test\NadinSoft.Domain.Test\NadinSoft.Domain.Test.csproj", "{51518CDE-5D2F-484E-9131-AF1D0462E853}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{50DA47FB-445B-497A-8EFA-63FCAA8058F8} = {80DE306A-F103-4F61-B387-22ACA7224999}
+		{51518CDE-5D2F-484E-9131-AF1D0462E853} = {ED80B959-4D4C-4757-BA7F-5FB1F43EF584}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{50DA47FB-445B-497A-8EFA-63FCAA8058F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50DA47FB-445B-497A-8EFA-63FCAA8058F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50DA47FB-445B-497A-8EFA-63FCAA8058F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50DA47FB-445B-497A-8EFA-63FCAA8058F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51518CDE-5D2F-484E-9131-AF1D0462E853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51518CDE-5D2F-484E-9131-AF1D0462E853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51518CDE-5D2F-484E-9131-AF1D0462E853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51518CDE-5D2F-484E-9131-AF1D0462E853}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
