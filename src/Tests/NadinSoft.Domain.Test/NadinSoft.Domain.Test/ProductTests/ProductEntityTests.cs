@@ -6,28 +6,10 @@ namespace NadinSoft.Domain.Test.ProductTests;
 public class ProductEntityTests
 {
     [Fact]
-    public void Creating_Product_With_Null_Id_Should_Throw_Exception()
-    {
-        // Arrange
-        Guid? id = null;
-        var name = "test product";
-        var manufacturePhone = "+989332426728";
-        var manufactureEmail = "test@test.com";
-        var produceDate = DateTime.Now;
-        Guid? userId = null;
-
-        // Act
-        Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
-
-        // Assert
-        act.Should().Throw<ArgumentNullException>();
-    }
-    
-    [Fact]
     public void Creating_Product_With_Empty_Id_Should_Throw_Exception()
     {
         // Arrange
-        Guid? id = Guid.Empty;
+        Guid id = Guid.Empty;
         var name = "test product";
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
@@ -203,5 +185,23 @@ public class ProductEntityTests
 
         // Assert
         product1.Equals(product2).Should().BeTrue();
+    }
+    
+    [Fact]
+    public void Creating_Product_Should_Generate_Slug_Automaticly()
+    {
+        // Arrange
+        Guid id = Guid.NewGuid();
+        var name = "test product";
+        var manufacturePhone = "+989332426728";
+        var manufactureEmail = "test@test.com";
+        var produceDate = DateTime.Now;
+        Guid? userId = Guid.NewGuid();
+
+        // Act
+        var product =  ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
+
+        // Assert
+        product.Slug.Equals("test-product-2025-07-08").Should().Be(true);
     }
 }
