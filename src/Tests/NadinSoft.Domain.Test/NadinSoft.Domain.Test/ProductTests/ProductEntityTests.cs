@@ -9,12 +9,12 @@ public class ProductEntityTests
     public void Creating_Product_With_Empty_Id_Should_Throw_Exception()
     {
         // Arrange
-        Guid id = Guid.Empty;
+        var id = Guid.Empty;
         var name = "test product";
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = null;
+        var userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -24,24 +24,6 @@ public class ProductEntityTests
     }
     
     [Fact]
-    public void Creating_Product_With_Null_User_Should_Throw_Exception()
-    {
-        // Arrange
-        var id = Guid.NewGuid();
-        var name = "test product";
-        var manufacturePhone = "+989332426728";
-        var manufactureEmail = "test@test.com";
-        var produceDate = DateTime.Now;
-        Guid? userId = null;
-
-        // Act
-        Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
-
-        // Assert
-        act.Should().Throw<ArgumentNullException>();
-    }
-
-    [Fact]
     public void Creating_Product_With_Empty_User_Should_Throw_Exception()
     {
         // Arrange
@@ -50,7 +32,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.Empty;
+        Guid userId = Guid.Empty;
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -68,7 +50,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -86,7 +68,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -105,7 +87,7 @@ public class ProductEntityTests
         var manufacturePhone = "";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -123,7 +105,7 @@ public class ProductEntityTests
         string? manufacturePhone = null;
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -141,7 +123,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         string? manufactureEmail = null;
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -159,7 +141,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         Action act = () => ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -177,7 +159,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         var product1 = ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);
@@ -196,7 +178,7 @@ public class ProductEntityTests
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
         var produceDate = DateTime.Now;
-        Guid? userId = Guid.NewGuid();
+        Guid userId = Guid.NewGuid();
 
         // Act
         var product =  ProductEntity.Create(id, name, manufacturePhone, manufactureEmail, produceDate, userId);

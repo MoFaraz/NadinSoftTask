@@ -3,5 +3,10 @@
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=e192d90c_002Dab2a_002D423f_002D8b5f_002D954b2d2d99bd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Creating_New_User_Should_Be_Success" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
   &lt;TestAncestor&gt;
     &lt;TestId&gt;xUnit::EF89FBB5-36F8-4F01-BA86-7599445220FC::net8.0::NadinSoft.Application.Test.UserFeaturesTests&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::EF89FBB5-36F8-4F01-BA86-7599445220FC::net8.0::NadinSoft.Application.Test.ProductFeaturesTests.Add_Product_With_Valid_Parameters_Should_Succeed&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::EF89FBB5-36F8-4F01-BA86-7599445220FC::net8.0::NadinSoft.Application.Test.ProductFeaturesTests.Exists_Product_Can_Not_Be_Created&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::EF89FBB5-36F8-4F01-BA86-7599445220FC::net8.0::NadinSoft.Application.Test.ProductFeaturesTests.Getting_List_Of_Products_Should_Be_Success&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::EF89FBB5-36F8-4F01-BA86-7599445220FC::net8.0::NadinSoft.Application.Test.ProductFeaturesTests.Searching_For_Products_Should_Have_At_Least_Three_Characters&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::EF89FBB5-36F8-4F01-BA86-7599445220FC::net8.0::NadinSoft.Application.Test.ProductFeaturesTests&lt;/TestId&gt;
   &lt;/TestAncestor&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
