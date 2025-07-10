@@ -9,7 +9,7 @@ public class GetProductByIdQueryHandler(IUnitOfWork unitOfWork): IRequestHandler
 {
     public async ValueTask<OperationResult<GetProductByIdQueryResult>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductRepository.GetProductByIdAsync(request.Id, cancellationToken);
+        var product = await unitOfWork.ProductRepository.GetProductByIdForUpdateAsync(request.Id, cancellationToken);
         if (product is null)
             return OperationResult<GetProductByIdQueryResult>.NotFoundResult(nameof(GetProductByIdQuery.Id), "Product not found");
 

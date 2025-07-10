@@ -8,7 +8,7 @@ public class ChangeProductAvailabilityCommandHandler(IUnitOfWork unitOfWork): IR
 {
     public async ValueTask<OperationResult<bool>> Handle(ChangeProductAvailabilityCommand request, CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductRepository.GetProductByIdAsync(request.Id, cancellationToken);
+        var product = await unitOfWork.ProductRepository.GetProductByIdForUpdateAsync(request.Id, cancellationToken);
         
         if (product is null)
             return OperationResult<bool>.NotFoundResult(nameof(ChangeProductAvailabilityCommand.Id), "Product not found");
