@@ -11,5 +11,5 @@ public class BaseEntity<TKey> : IEntity
     public DateTime CreatedDate { get; set; }
     public DateTime ModifiedDate { get; set; }
 
-    protected TKey Id { get; set; }
+    public TKey Id { get; set; }
 }
