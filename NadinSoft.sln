@@ -16,6 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NadinSoft.Infrastructure.Persistence", "src\Infrastructure\NadinSoft.Infrastructure.Persistence\NadinSoft.Infrastructure.Persistence.csproj", "{2F51E729-C546-4A81-95F3-581E03F59238}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDEA999C-BE96-4FD2-BDC5-787E51EC0C3D}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
