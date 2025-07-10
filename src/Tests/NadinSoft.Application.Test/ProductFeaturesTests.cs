@@ -146,11 +146,50 @@ public class ProductFeaturesTests
         var getProductByNameQueryHandler = new GetProductByNameQueryHandler(unitOfWork);
 
         // Act
-        var getProductResult=
+        var getProductResult =
             await validationBehavior.Handle(product, CancellationToken.None, getProductByNameQueryHandler.Handle);
 
         // Assert
         getProductResult.IsSuccess.Should().BeFalse();
         _outputHelper.WriteLineOperationResultErrors(getProductResult);
+    }
+
+    [Fact]
+    public async Task Editing_A_Product_With_Valid_Parameters_Should_Be_Success()
+    {
+        var faker = new Faker();
+        var mockId = Guid.NewGuid();
+        var productEntityMock = ProductEntity.Create(mockId, "name", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now, Guid.NewGuid());
+
+        var productRepository = Substitute.For<IProductRepository>();
+
+        productRepository.GetByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
+
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.ProductRepository.Returns(productRepository);
+
+        var editedPhoneNumber = faker.Phone.PhoneNumber();
+        var editedEmail = faker.Person.Email;
+        var editProductCommand =
+            new EditProductCommand(mockId, "name2", editedPhoneNumber, editedEmail, DateTime.Now);
+
+
+        var validationBehavior =
+            new ValidateRequestBehavior<EditProductCommand, OperationResult<bool>>(
+                _serviceProvider
+                    .GetRequiredService<IValidator<EditProductCommand>>());
+
+        var editProductCommandHandler = new EditProductCommandHandler(unitOfWork);
+
+        // Act
+        var editResult = await validationBehavior.Handle(editProductCommand, CancellationToken.None,
+            editProductCommandHandler.Handle);
+
+        // Assert
+        editResult.IsSuccess.Should().BeTrue();
+        productEntityMock.Name.Should().BeEquivalentTo("name2");
+        productEntityMock.ManufacturePhone.Should().BeEquivalentTo(editedPhoneNumber);
+        productEntityMock.ManufactureEmail.Should().BeEquivalentTo(editedEmail);
     }
 }
