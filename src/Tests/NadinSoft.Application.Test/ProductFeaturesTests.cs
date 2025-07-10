@@ -167,7 +167,8 @@ public class ProductFeaturesTests
 
         var productRepository = Substitute.For<IProductRepository>();
 
-        productRepository.GetProductByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
+        productRepository.GetProductByIdForUpdateAsync(productEntityMock.Id)!.Returns(
+            Task.FromResult(productEntityMock));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.ProductRepository.Returns(productRepository);
@@ -243,7 +244,8 @@ public class ProductFeaturesTests
 
         var productRepository = Substitute.For<IProductRepository>();
 
-        productRepository.GetProductByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
+        productRepository.GetProductByIdForUpdateAsync(productEntityMock.Id)!.Returns(
+            Task.FromResult(productEntityMock));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.ProductRepository.Returns(productRepository);
@@ -259,5 +261,38 @@ public class ProductFeaturesTests
         // Assert
         changeResult.IsSuccess.Should().BeTrue();
         productEntityMock.IsAvailable.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task Getting_User_Products_With_Valid_Parameters_Should_Be_Success()
+    {
+        // Arrange
+        var faker = new Faker();
+        var userProductQuery = new GetProductByNameQuery("name");
+        var mockUserId = Guid.NewGuid();
+        var fakeProduct1 = ProductEntity.Create(Guid.NewGuid(), "name1", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now,
+            mockUserId);
+        var fakeProduct2 = ProductEntity.Create(Guid.NewGuid(), "name2", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now,
+            mockUserId);
+        List<ProductEntity> fakeProducts = [fakeProduct1, fakeProduct2];
+
+        var productRepository = Substitute.For<IProductRepository>();
+
+        productRepository.GetByNameAsync(userProductQuery.SearchTerm).Returns(Task.FromResult(fakeProducts));
+
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.ProductRepository.Returns(productRepository);
+
+        var userProductHandler = new GetProductByNameQueryHandler(unitOfWork);
+
+        // Act
+        var getProductResult =
+            await Helpers.ValidateAndExecuteAsync(userProductQuery, userProductHandler, _serviceProvider);
+
+        // Assert
+        getProductResult.Result.Should().NotBeEmpty();
+        getProductResult.Result.Count.Should().Be(fakeProducts.Count);
     }
 }
