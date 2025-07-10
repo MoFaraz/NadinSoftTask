@@ -170,14 +170,14 @@ public class ProductEntityTests
     }
     
     [Fact]
-    public void Creating_Product_Should_Generate_Slug_Automaticly()
+    public void Creating_Product_Should_Generate_Slug_Automatically()
     {
         // Arrange
         Guid id = Guid.NewGuid();
         var name = "test product";
         var manufacturePhone = "+989332426728";
         var manufactureEmail = "test@test.com";
-        var produceDate = DateTime.Now;
+        var produceDate = DateTime.Parse("2025/07/08");
         Guid userId = Guid.NewGuid();
 
         // Act
