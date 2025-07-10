@@ -4,9 +4,9 @@ using NadinSoft.Domain.Common;
 
 namespace NadinSoft.Domain.Entities.Product;
 
-public sealed partial class ProductEntity: BaseEntity<Guid>
+public sealed partial class ProductEntity : BaseEntity<Guid>
 {
-    public Guid Id { get; private set; }
+    public Guid Id { get; private init; }
     public string Name { get; private set; } = string.Empty;
     public string ManufacturePhone { get; private set; } = string.Empty;
     public string ManufactureEmail { get; private set; } = string.Empty;
@@ -30,6 +30,26 @@ public sealed partial class ProductEntity: BaseEntity<Guid>
     {
     }
 
+    public static ProductEntity Create(string name, string manufacturePhone, string manufactureEmail,
+        DateTime produceDate, Guid userId)
+    {
+        Guard.Against.NullOrWhiteSpace(name, message: "Name cannot be null or empty.");
+        Guard.Against.NullOrWhiteSpace(manufacturePhone, message: "ManufacturePhone cannot be null or empty.");
+        Guard.Against.NullOrWhiteSpace(manufactureEmail, message: "ManufactureEmail cannot be null or empty.");
+        Guard.Against.NullOrEmpty(userId, message: "UserId cannot be null or empty.");
+
+        return new ProductEntity()
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            IsAvailable = true,
+            ManufacturePhone = manufacturePhone,
+            ManufactureEmail = manufactureEmail,
+            ProduceDate = produceDate,
+            UserId = userId
+        };
+    }
+
     public static ProductEntity Create(Guid id, string name, string manufacturePhone, string manufactureEmail,
         DateTime produceDate, Guid userId)
     {
@@ -49,6 +69,19 @@ public sealed partial class ProductEntity: BaseEntity<Guid>
             ProduceDate = produceDate,
             UserId = userId
         };
+    }
+
+    public void Edit(string name, string manufacturePhone, string manufactureEmail,
+        DateTime produceDate)
+    {
+        Guard.Against.NullOrWhiteSpace(name, message: "Name cannot be null or empty.");
+        Guard.Against.NullOrWhiteSpace(manufacturePhone, message: "ManufacturePhone cannot be null or empty.");
+        Guard.Against.NullOrWhiteSpace(manufactureEmail, message: "ManufactureEmail cannot be null or empty.");
+
+        Name = name;
+        ManufacturePhone = manufacturePhone;
+        ManufactureEmail = manufactureEmail;
+        ProduceDate = produceDate;
     }
 
     public void ChangeAvailability(bool isAvailable)
