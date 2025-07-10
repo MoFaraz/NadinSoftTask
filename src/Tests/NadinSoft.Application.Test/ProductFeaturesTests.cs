@@ -1,6 +1,8 @@
+using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NadinSoft.Application.Common;
+using NadinSoft.Application.Common.MappingConfiguration;
 using NadinSoft.Application.Extensions;
 using NadinSoft.Application.Features.Common;
 using NadinSoft.Application.Features.Product.Commands;
@@ -9,6 +11,7 @@ using NadinSoft.Application.Repositories.Common;
 using NadinSoft.Application.Repositories.ProductRepository;
 using NadinSoft.Application.Test.Extensions;
 using NadinSoft.Domain.Entities.Product;
+using NadinSoft.Domain.Entities.User;
 
 namespace NadinSoft.Application.Test;
 
@@ -20,7 +23,7 @@ public class ProductFeaturesTests
     public ProductFeaturesTests(ITestOutputHelper outputHelper)
     {
         var serviceCollection = new ServiceCollection();
-        serviceCollection.RegisterApplicationValidator();
+        serviceCollection.RegisterApplicationValidator().AddApplicationAutoMapper();
         _serviceProvider = serviceCollection.BuildServiceProvider();
         _outputHelper = outputHelper;
     }
@@ -164,7 +167,7 @@ public class ProductFeaturesTests
 
         var productRepository = Substitute.For<IProductRepository>();
 
-        productRepository.GetByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
+        productRepository.GetProductByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.ProductRepository.Returns(productRepository);
@@ -191,5 +194,70 @@ public class ProductFeaturesTests
         productEntityMock.Name.Should().BeEquivalentTo("name2");
         productEntityMock.ManufacturePhone.Should().BeEquivalentTo(editedPhoneNumber);
         productEntityMock.ManufactureEmail.Should().BeEquivalentTo(editedEmail);
+    }
+
+    [Fact]
+    public async Task Getting_Product_Detail_With_Valid_Parameters_Should_Be_Success()
+    {
+        var faker = new Faker();
+        var mockUser = new UserEntity(faker.Person.FirstName, faker.Person.LastName, faker.Person.UserName,
+            faker.Person.Email);
+        var productEntityMock = ProductEntity.Create("name", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now, mockUser);
+
+        var productRepository = Substitute.For<IProductRepository>();
+
+        productRepository.GetProductDetailByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
+
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.ProductRepository.Returns(productRepository);
+
+        var getProductDetailQuery =
+            new GetProductDetailByIdQuery(productEntityMock.Id);
+
+
+        var validationBehavior =
+            new ValidateRequestBehavior<GetProductDetailByIdQuery, OperationResult<GetProductDetailByIdResult>>(
+                _serviceProvider
+                    .GetRequiredService<IValidator<GetProductDetailByIdQuery>>());
+
+        var mapper = _serviceProvider.GetRequiredService<IMapper>();
+        var getProductDetailHandler = new GetProductDetailByIdHandler(unitOfWork, mapper);
+
+        // Act
+        var result =
+            await Helpers.ValidateAndExecuteAsync(getProductDetailQuery, getProductDetailHandler, _serviceProvider);
+
+        // Assert
+        result.IsSuccess.Should().BeTrue();
+        result.Result!.OwnerUsername.Should().BeEquivalentTo(mockUser.UserName);
+    }
+
+    [Fact]
+    public async Task Changing_Product_Availability_With_Valid_Parameters_Should_Be_Success()
+    {
+        var faker = new Faker();
+        var mockId = Guid.NewGuid();
+        var productEntityMock = ProductEntity.Create(mockId, "name", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now, Guid.NewGuid());
+
+        var productRepository = Substitute.For<IProductRepository>();
+
+        productRepository.GetProductByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
+
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.ProductRepository.Returns(productRepository);
+
+        var changeCommand =
+            new ChangeProductAvailabilityCommand(mockId, false);
+
+        var changeHandler = new ChangeProductAvailabilityCommandHandler(unitOfWork);
+
+        // Act
+        var changeResult = await Helpers.ValidateAndExecuteAsync(changeCommand, changeHandler, _serviceProvider);
+
+        // Assert
+        changeResult.IsSuccess.Should().BeTrue();
+        productEntityMock.IsAvailable.Should().BeFalse();
     }
 }
