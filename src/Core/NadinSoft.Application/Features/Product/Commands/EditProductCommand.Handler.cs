@@ -10,7 +10,7 @@ public class EditProductCommandHandler(IUnitOfWork unitOfWork)
     public async ValueTask<OperationResult<bool>> Handle(EditProductCommand request,
         CancellationToken cancellationToken)
     {
-        var product = await unitOfWork.ProductRepository.GetByIdAsync(request.Id, cancellationToken);
+        var product = await unitOfWork.ProductRepository.GetProductByIdAsync(request.Id, cancellationToken);
 
         if (product is null)
             return OperationResult<bool>.FailureResult(nameof(EditProductCommand.Id), "Product not found");
