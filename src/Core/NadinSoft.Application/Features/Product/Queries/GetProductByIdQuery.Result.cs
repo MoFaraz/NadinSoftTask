@@ -1,3 +1,9 @@
 namespace NadinSoft.Application.Features.Product.Queries;
 
-public record GetProductByIdQueryResult(string Name, string ManufacturePhone, string ManufactureEmail, DateTime ProduceDate, Guid UserId);
+public record GetProductByIdQueryResult(
+    string Name,
+    string ManufacturePhone,
+    string ManufactureEmail,
+    bool IsAvailable,
+    DateTime ProduceDate
+);
