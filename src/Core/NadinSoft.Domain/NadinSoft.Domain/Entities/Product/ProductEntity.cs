@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Ardalis.GuardClauses;
 using NadinSoft.Domain.Common;
+using NadinSoft.Domain.Entities.User;
 
 namespace NadinSoft.Domain.Entities.Product;
 
@@ -30,6 +31,12 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
     {
     }
 
+    #region Navigation
+
+    public UserEntity User { get; private set; }
+
+    #endregion
+
     public static ProductEntity Create(string name, string manufacturePhone, string manufactureEmail,
         DateTime produceDate, Guid userId)
     {
@@ -47,6 +54,27 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
             ManufactureEmail = manufactureEmail,
             ProduceDate = produceDate,
             UserId = userId
+        };
+    }
+
+    public static ProductEntity Create(string name, string manufacturePhone, string manufactureEmail,
+        DateTime produceDate, UserEntity user)
+    {
+        Guard.Against.NullOrWhiteSpace(name, message: "Name cannot be null or empty.");
+        Guard.Against.NullOrWhiteSpace(manufacturePhone, message: "ManufacturePhone cannot be null or empty.");
+        Guard.Against.NullOrWhiteSpace(manufactureEmail, message: "ManufactureEmail cannot be null or empty.");
+        Guard.Against.Null(user, message: "User cannot be null.");
+
+        return new ProductEntity()
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            IsAvailable = true,
+            ManufacturePhone = manufacturePhone,
+            ManufactureEmail = manufactureEmail,
+            ProduceDate = produceDate,
+            UserId = user.Id,
+            User = user
         };
     }
 
@@ -100,7 +128,7 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
         if (ReferenceEquals(this, product))
             return true;
 
-        return productEntity.Id.Equals(this.Id);
+        return productEntity.Id.Equals(Id);
     }
 
     public override int GetHashCode()
