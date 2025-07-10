@@ -7,8 +7,7 @@ namespace NadinSoft.Domain.Entities.Product;
 
 public sealed partial class ProductEntity : BaseEntity<Guid>
 {
-    public Guid Id { get; private init; }
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; private set; } 
     public string ManufacturePhone { get; private set; } = string.Empty;
     public string ManufactureEmail { get; private set; } = string.Empty;
     public DateTime ProduceDate { get; private set; }
