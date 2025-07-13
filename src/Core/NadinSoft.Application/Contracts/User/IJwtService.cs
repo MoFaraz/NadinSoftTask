@@ -5,5 +5,5 @@ namespace NadinSoft.Application.Contracts.User;
 
 public interface IJwtService
 {
-    Task<JwtAccessTokenModel> GenerateJwtTokenAsync(UserEntity user, CancellationToken cancellationToken=default);
+    Task<JwtAccessTokenModel> GenerateTokenAsync(UserEntity user, CancellationToken cancellationToken=default);
 }
