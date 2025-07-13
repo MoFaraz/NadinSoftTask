@@ -8,13 +8,9 @@ public class NadinSoftDbContextDesignTimeFactory : IDesignTimeDbContextFactory<N
 {
     public NadinSoftDbContext CreateDbContext(string[] args)
     {
-        var connectionString =
-            "Server=localhost,1433;Database=NadinSoftDb;User Id=sa;Password=Your_strong_password123!;TrustServerCertificate=True;";
         var optionsBuilder = new DbContextOptionsBuilder<NadinSoftDbContext>();
-        optionsBuilder.UseSqlServer(connectionString);
-
+        optionsBuilder.UseSqlServer();
         
-        Console.WriteLine("Creating DbContext with connection string...");
         return new NadinSoftDbContext(optionsBuilder.Options);
     }
 }
