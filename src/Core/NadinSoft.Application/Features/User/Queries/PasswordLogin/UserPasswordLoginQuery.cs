@@ -4,7 +4,7 @@ using NadinSoft.Application.Common;
 using NadinSoft.Application.Common.Validation;
 using NadinSoft.Application.Contracts.User.Models;
 
-namespace NadinSoft.Application.Features.User.Commands.Queries.PasswordLogin;
+namespace NadinSoft.Application.Features.User.Queries.PasswordLogin;
 
 public record UserPasswordLoginQuery(string UserNameOrEmail, string Password): IRequest<OperationResult<JwtAccessTokenModel>>, IValidatableModel<UserPasswordLoginQuery>
 {

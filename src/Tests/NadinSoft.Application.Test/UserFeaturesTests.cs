@@ -8,8 +8,8 @@ using NadinSoft.Application.Contracts.User;
 using NadinSoft.Application.Contracts.User.Models;
 using NadinSoft.Application.Extensions;
 using NadinSoft.Application.Features.Common;
-using NadinSoft.Application.Features.User.Commands.Queries.PasswordLogin;
 using NadinSoft.Application.Features.User.Commands.Register;
+using NadinSoft.Application.Features.User.Queries.PasswordLogin;
 using NadinSoft.Application.Test.Extensions;
 using NadinSoft.Domain.Entities.User;
 using NSubstitute;
@@ -140,14 +140,14 @@ public class UserFeaturesTests
         var userEntity = new UserEntity(faker.Person.FirstName, faker.Person.LastName, faker.Person.UserName,
             faker.Person.Email);
 
-        userManager.GetByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+        userManager.GetUserByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
             .Returns(userEntity);
 
         userManager.ValidatePasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
             .Returns(Task.FromResult(IdentityResult.Success));
         var jwtService = Substitute.For<IJwtService>();
 
-        jwtService.GenerateJwtTokenAsync(userEntity, CancellationToken.None)
+        jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
             .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
 
         // Act
@@ -172,7 +172,7 @@ public class UserFeaturesTests
         var userEntity = new UserEntity(faker.Person.FirstName, faker.Person.LastName, faker.Person.UserName,
             faker.Person.Email);
 
-        userManager.GetByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+        userManager.GetUserByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
             .Returns(userEntity);
 
         userManager.ValidatePasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
@@ -180,7 +180,7 @@ public class UserFeaturesTests
 
         var jwtService = Substitute.For<IJwtService>();
 
-        jwtService.GenerateJwtTokenAsync(userEntity, CancellationToken.None)
+        jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
             .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
 
         // Act
@@ -207,14 +207,14 @@ public class UserFeaturesTests
         var userEntity = new UserEntity(faker.Person.FirstName, faker.Person.LastName, faker.Person.UserName,
             faker.Person.Email);
 
-        userManager.GetByEmailAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+        userManager.GetUserByEmailAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
             .Returns(userEntity);
 
         userManager.ValidatePasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
             .Returns(Task.FromResult(IdentityResult.Success));
         var jwtService = Substitute.For<IJwtService>();
 
-        jwtService.GenerateJwtTokenAsync(userEntity, CancellationToken.None)
+        jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
             .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
 
         // Act
@@ -239,14 +239,14 @@ public class UserFeaturesTests
         var userEntity = new UserEntity(faker.Person.FirstName, faker.Person.LastName, faker.Person.UserName,
             faker.Person.Email);
 
-        userManager.GetByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+        userManager.GetUserByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
             .Returns(Task.FromResult<UserEntity?>(null));
 
         userManager.ValidatePasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
             .Returns(Task.FromResult(IdentityResult.Success));
         var jwtService = Substitute.For<IJwtService>();
 
-        jwtService.GenerateJwtTokenAsync(userEntity, CancellationToken.None)
+        jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
             .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
 
         // Act
@@ -273,14 +273,14 @@ public class UserFeaturesTests
         var userEntity = new UserEntity(faker.Person.FirstName, faker.Person.LastName, faker.Person.UserName,
             faker.Person.Email);
 
-        userManager.GetByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
+        userManager.GetUserByUserNameAsync(loginQuery.UserNameOrEmail, CancellationToken.None)
             .Returns(Task.FromResult<UserEntity?>(userEntity));
 
         userManager.ValidatePasswordAsync(userEntity, loginQuery.Password, CancellationToken.None)
             .Returns(Task.FromResult(IdentityResult.Success));
         var jwtService = Substitute.For<IJwtService>();
 
-        jwtService.GenerateJwtTokenAsync(userEntity, CancellationToken.None)
+        jwtService.GenerateTokenAsync(userEntity, CancellationToken.None)
             .Returns(Task.FromResult(new JwtAccessTokenModel("AccessToken", 3000)));
 
         // Act
