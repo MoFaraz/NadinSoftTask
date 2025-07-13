@@ -1,4 +1,5 @@
 using System.Text;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,25 @@ namespace NadinSoft.WebFramework.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
+
+    public static WebApplicationBuilder AddVersioning(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddApiVersioning(opt =>
+            {
+
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ReportApiVersions = true;
+                opt.ApiVersionReader = new UrlSegmentApiVersionReader();
+
+            }).AddMvc()
+            .AddApiExplorer(opt =>
+            {
+                opt.GroupNameFormat = "'v'V";
+                opt.SubstituteApiVersionInUrl = true;
+            });
+        return builder;
+    }
     public static WebApplicationBuilder ConfigureAuthenticationAndAuthorization(this WebApplicationBuilder builder)
     {
         var signInKey = builder.Configuration.GetSection("JwtConfiguration")["SignInKey"];
