@@ -1,3 +1,3 @@
 namespace NadinSoft.Application.Contracts.User.Models;
 
-public record JwtAccessTokenModel(string AccessToken, int ExpiresSeconds, string TokenType = "Bearer");
+public record JwtAccessTokenModel(string AccessToken, double ExpiresSeconds, string TokenType = "Bearer");
