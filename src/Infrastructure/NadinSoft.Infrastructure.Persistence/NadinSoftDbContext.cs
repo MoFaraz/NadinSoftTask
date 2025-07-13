@@ -20,7 +20,14 @@ public class NadinSoftDbContext(DbContextOptions<NadinSoftDbContext> options) : 
         return base.SaveChanges();
     }
 
-    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        ApplyEntityChangeDates();
+        return base.SaveChangesAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
+        CancellationToken cancellationToken = new CancellationToken())
     {
         ApplyEntityChangeDates();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
