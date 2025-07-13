@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using NadinSoft.Domain.Common;
+using NadinSoft.Domain.Entities.User;
 using NadinSoft.Infrastructure.Persistence.Extensions;
 
 namespace NadinSoft.Infrastructure.Persistence;
@@ -20,7 +21,7 @@ public class NadinSoftDbContext(DbContextOptions<NadinSoftDbContext> options) : 
         return base.SaveChanges();
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         ApplyEntityChangeDates();
         return base.SaveChangesAsync(cancellationToken);
@@ -32,6 +33,7 @@ public class NadinSoftDbContext(DbContextOptions<NadinSoftDbContext> options) : 
         ApplyEntityChangeDates();
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
+    
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
     {
