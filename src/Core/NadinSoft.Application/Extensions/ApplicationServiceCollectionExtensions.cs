@@ -1,7 +1,10 @@
+using System.Reflection;
 using FluentValidation;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using NadinSoft.Application.Common.MappingConfiguration;
 using NadinSoft.Application.Common.Validation;
+using NadinSoft.Application.Features.Common;
 
 namespace NadinSoft.Application.Extensions;
 
@@ -43,10 +46,22 @@ public static class ApplicationServiceCollectionExtensions
 
         return services;
     }
-
+ 
     public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(RegisterApplicationMappers));
+        return services;
+    }
+
+    public static IServiceCollection AddApplicationMediatorServices(this IServiceCollection services)
+    {
+        services.AddMediator(opt =>
+        {
+            opt.ServiceLifetime = ServiceLifetime.Transient;
+            opt.Namespace = "NadinSoft.Application.GeneratedMediatorServices";
+        });
+
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidateRequestBehavior<,>));
         return services;
     }
 }
