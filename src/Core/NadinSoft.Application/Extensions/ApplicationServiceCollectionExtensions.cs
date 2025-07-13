@@ -12,8 +12,10 @@ public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection RegisterApplicationValidator(this IServiceCollection services)
     {
-        var validationTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(c =>
-            c.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidatableModel<>)));
+        var validationTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetExportedTypes()).Where(c =>
+                c.GetInterfaces().Any(i =>
+                    i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidatableModel<>)))
+            .ToList();
 
         foreach (var validationType in validationTypes)
         {
@@ -46,7 +48,7 @@ public static class ApplicationServiceCollectionExtensions
 
         return services;
     }
- 
+
     public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(RegisterApplicationMappers));
