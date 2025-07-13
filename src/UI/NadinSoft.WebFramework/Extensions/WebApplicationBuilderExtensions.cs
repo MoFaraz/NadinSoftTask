@@ -10,7 +10,7 @@ namespace NadinSoft.WebFramework.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static WebApplicationBuilder ConfigureAuthenticationAndAuthorizaiton(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder ConfigureAuthenticationAndAuthorization(this WebApplicationBuilder builder)
     {
         var signInKey = builder.Configuration.GetSection("JwtConfiguration")["SignInKey"];
         var encryptionKey = builder.Configuration.GetSection("JwtConfiguration")["EncryptionKey"];
