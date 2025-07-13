@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Enrichers.Span;
+using Serilog.Events;
 using Serilog.Exceptions;
 
 namespace NadinSoft.Infrastructure.CrossCutting.Logging;
@@ -20,14 +21,16 @@ public class LoggingConfiguration
         if (context.HostingEnvironment.IsDevelopment())
         {
             configuration.WriteTo.Console().MinimumLevel.Information();
+            configuration.WriteTo.Seq(context.Configuration["Seq:Url"]!, LogEventLevel.Information,
+                apiKey: context.Configuration["Seq:ApiKey"]);
             return;
         }
 
         if (context.HostingEnvironment.IsProduction())
         {
             configuration.WriteTo.Console().MinimumLevel.Error();
-            //TODO seq sink configuration
+            configuration.WriteTo.Seq(context.Configuration["Seq:Url"]!, LogEventLevel.Error,
+                apiKey: context.Configuration["Seq:ApiKey"]);
         }
     };
-
 }
