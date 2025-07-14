@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NadinSoft.Application.Extensions;
+using NadinSoft.Infrastructure.Identity.Extensions;
 using NadinSoft.Infrastructure.Persistence.Extensions;
 using NadinSoft.Infrastructure.Persistence.Repositories.Common;
 using Testcontainers.MsSql;
@@ -27,13 +29,16 @@ public class PersistenceTestSetup : IAsyncLifetime
         var db = new NadinSoftDbContext(dbOptionBuilder.Options);
 
         await db.Database.MigrateAsync();
-        
+
         UnitOfWork = new UnitOfWork(db);
 
         var configs = new Dictionary<string, string>()
         {
-            { "ConnectionStrings:NadinSoftDb", _sqlContainer.GetConnectionString() }
-            
+            { "ConnectionStrings:NadinSoftDb", _sqlContainer.GetConnectionString() },
+            { "JwtConfiguration:SignInKey", "ShouldBe-LongerThan-16Char-SecretKey" },
+            { "JwtConfiguration:Audience", "TestAud" },
+            { "JwtConfiguration:Issuer", "TestIssuer" },
+            { "JwtConfiguration:ExpirationInMinutes", "60" },
         };
 
         var configurationBuilder = new ConfigurationBuilder();
@@ -46,8 +51,10 @@ public class PersistenceTestSetup : IAsyncLifetime
         serviceCollection.AddApplicationAutoMapper()
             .AddApplicationMediatorServices()
             .RegisterApplicationValidator()
-            .AddPersistenceDbContext(configurationBuilder.Build());
-        
+            .AddPersistenceDbContext(configurationBuilder.Build())
+            .AddIdentityServices(configurationBuilder.Build())
+            .AddLogging(c => c.AddConsole());
+
         ServiceProvider = serviceCollection.BuildServiceProvider(false);
     }
 

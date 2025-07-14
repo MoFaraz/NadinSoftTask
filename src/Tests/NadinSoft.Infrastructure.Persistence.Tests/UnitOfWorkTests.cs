@@ -1,38 +1,131 @@
 using FluentAssertions;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
+using NadinSoft.Application.Contracts.User;
+using NadinSoft.Application.Features.Product.Commands;
+using NadinSoft.Application.Features.User.Commands.Register;
+using NadinSoft.Application.Test.Extensions;
 using NadinSoft.Domain.Entities.Product;
 using NadinSoft.Infrastructure.Persistence.Repositories.Common;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace NadinSoft.Infrastructure.Persistence.Tests;
 
 public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
 {
     private readonly UnitOfWork _unitOfWork;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ITestOutputHelper _outputHelper;
 
-    
-    public UnitOfWorkTests(PersistenceTestSetup setup)
+
+    public UnitOfWorkTests(PersistenceTestSetup setup, ITestOutputHelper outputHelper)
     {
         _unitOfWork = setup.UnitOfWork;
+        _serviceProvider = setup.ServiceProvider;
+        _outputHelper = outputHelper;
     }
 
     [Fact]
     public async Task Adding_New_Product_Should_Save_To_Database()
     {
+        var sender = _serviceProvider.GetRequiredService<ISender>();
+        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        await sender.Send(testUser);
+
+        var manager = _serviceProvider.GetRequiredService<IUserManager>();
+        var user = await manager.GetUserByUserNameAsync("test", CancellationToken.None);
+
+
         var product = ProductEntity.Create("product", "09332426728", "mopharaz@gmail.com", DateTime.Now,
-            Guid.NewGuid());
-        
+            user!.Id);
+
         await _unitOfWork.ProductRepository.CreateAsync(product);
 
         await _unitOfWork.CommitAsync();
-        
+
         var productInDb = await _unitOfWork.ProductRepository.GetByNameAsync("product");
-        
+
         productInDb.Should().NotBeNull();
     }
 
-    // [Fact]
-    // public async Task Getting_Product_With_Id_Should_Return_Product()
-    // {
-    //     var product = await _unitOfWork.ProductRepository.Get
-    // }
+    [Fact]
+    public async Task Getting_User_Product_With_Id_Should_Return_Product()
+    {
+        var sender = _serviceProvider.GetRequiredService<ISender>();
+        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        await sender.Send(testUser);
+
+        var manager = _serviceProvider.GetRequiredService<IUserManager>();
+        var user = await manager.GetUserByUserNameAsync("test", CancellationToken.None);
+
+        var product = ProductEntity.Create("product", "09332426728", "mopharaz@gmail.com", DateTime.Now,
+            user!.Id);
+
+        await _unitOfWork.ProductRepository.CreateAsync(product);
+
+        await _unitOfWork.CommitAsync();
+        var products = await _unitOfWork.ProductRepository.GetUserProductsAsync(user!.Id, CancellationToken.None);
+
+        products.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task Editing_Product_With_Valid_User_Id_Should_Success()
+    {
+        var sender = _serviceProvider.GetRequiredService<ISender>();
+        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        await sender.Send(testUser);
+
+        var manager = _serviceProvider.GetRequiredService<IUserManager>();
+        var user = await manager.GetUserByUserNameAsync("test", CancellationToken.None);
+
+        var product = ProductEntity.Create("product", "09332426728", "mopharaz@gmail.com", DateTime.Now,
+            user!.Id);
+
+        await _unitOfWork.ProductRepository.CreateAsync(product);
+
+        await _unitOfWork.CommitAsync();
+        var productInDb = await _unitOfWork.ProductRepository.GetByNameAsync("product");
+        var myProduct = productInDb.First();
+
+        var editCommand = new EditProductCommand(myProduct.Id, "test2", myProduct.ManufacturePhone,
+            myProduct.ManufactureEmail, myProduct.ProduceDate, myProduct.UserId);
+
+        var editResult = await sender.Send(editCommand);
+        await _unitOfWork.CommitAsync();
+
+        var productInDb2 = await _unitOfWork.ProductRepository.GetByNameAsync("test2");
+        editResult.IsSuccess.Should().BeTrue();
+        productInDb2.Count.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task Editing_Product_With_InValid_User_Id_Should_Fail()
+    {
+        var sender = _serviceProvider.GetRequiredService<ISender>();
+        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        await sender.Send(testUser);
+
+        var manager = _serviceProvider.GetRequiredService<IUserManager>();
+        var user = await manager.GetUserByUserNameAsync("test", CancellationToken.None);
+
+        var product = ProductEntity.Create("product", "09332426728", "mopharaz@gmail.com", DateTime.Now,
+            user!.Id);
+
+        await _unitOfWork.ProductRepository.CreateAsync(product);
+
+        await _unitOfWork.CommitAsync();
+        var productInDb = await _unitOfWork.ProductRepository.GetByNameAsync("product");
+        var myProduct = productInDb.First();
+
+        var editCommand = new EditProductCommand(myProduct.Id, "test2", myProduct.ManufacturePhone,
+            myProduct.ManufactureEmail, myProduct.ProduceDate, Guid.NewGuid());
+
+        var editResult = await sender.Send(editCommand);
+        await _unitOfWork.CommitAsync();
+
+        editResult.IsSuccess.Should().BeFalse();
+        _outputHelper.WriteLineOperationResultErrors(editResult);
+    }
 }
