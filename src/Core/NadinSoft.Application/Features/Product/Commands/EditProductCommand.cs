@@ -16,7 +16,9 @@ public record EditProductCommand(
     public IValidator<EditProductCommand> Validate(ValidationModelBase<EditProductCommand> validator)
     {
         validator.RuleFor(c => c.Name).NotEmpty().MinimumLength(3);
-        validator.RuleFor(c => c.ManufacturePhone).NotEmpty(); // TODO Add Regex for phone number
+        validator.RuleFor(c => c.ManufacturePhone).NotEmpty().WithMessage("Phone number is required.")
+            .Matches(@"^(?:\+98|98|0)?9\d{9}$")
+            .WithMessage("Phone number is not valid.");
         validator.RuleFor(c => c.ManufactureEmail).NotEmpty().EmailAddress();
         validator.RuleFor(c => c.ProduceDate).NotEmpty();
         validator.RuleFor(c => c.UserId).NotEmpty();
