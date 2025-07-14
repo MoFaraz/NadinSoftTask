@@ -34,7 +34,7 @@ public class ProductFeaturesTests
     {
         // Arrange
         var faker = new Faker();
-        var product = new CreateProductCommand("name", faker.Person.Phone, faker.Person.Email,
+        var product = new CreateProductCommand("name", "+989332426728", faker.Person.Email,
             DateTime.Now, Guid.NewGuid());
 
         var productRepository = Substitute.For<IProductRepository>();
@@ -163,7 +163,7 @@ public class ProductFeaturesTests
         var faker = new Faker();
         var mockId = Guid.NewGuid();
         var mockUserId = Guid.NewGuid();
-        var productEntityMock = ProductEntity.Create(mockId, "name", faker.Person.Phone, faker.Person.Email,
+        var productEntityMock = ProductEntity.Create(mockId, "name", "+989332426728", faker.Person.Email,
             DateTime.Now, mockUserId);
 
         var productRepository = Substitute.For<IProductRepository>();
@@ -174,10 +174,9 @@ public class ProductFeaturesTests
         var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.ProductRepository.Returns(productRepository);
 
-        var editedPhoneNumber = faker.Phone.PhoneNumber();
         var editedEmail = faker.Person.Email;
         var editProductCommand =
-            new EditProductCommand(mockId, "name2", editedPhoneNumber, editedEmail, DateTime.Now, mockUserId);
+            new EditProductCommand(mockId, "name2", "09332426728", editedEmail, DateTime.Now, mockUserId);
 
 
         var validationBehavior =
@@ -194,7 +193,6 @@ public class ProductFeaturesTests
         // Assert
         editResult.IsSuccess.Should().BeTrue();
         productEntityMock.Name.Should().BeEquivalentTo("name2");
-        productEntityMock.ManufacturePhone.Should().BeEquivalentTo(editedPhoneNumber);
         productEntityMock.ManufactureEmail.Should().BeEquivalentTo(editedEmail);
     }
 
@@ -240,8 +238,9 @@ public class ProductFeaturesTests
     {
         var faker = new Faker();
         var mockId = Guid.NewGuid();
+        var mockUserId = Guid.NewGuid();
         var productEntityMock = ProductEntity.Create(mockId, "name", faker.Person.Phone, faker.Person.Email,
-            DateTime.Now, Guid.NewGuid());
+            DateTime.Now, mockUserId);
 
         var productRepository = Substitute.For<IProductRepository>();
 
@@ -252,7 +251,7 @@ public class ProductFeaturesTests
         unitOfWork.ProductRepository.Returns(productRepository);
 
         var changeCommand =
-            new ChangeProductAvailabilityCommand(mockId, false);
+            new ChangeProductAvailabilityCommand(mockId, false, mockUserId);
 
         var changeHandler = new ChangeProductAvailabilityCommandHandler(unitOfWork);
 
