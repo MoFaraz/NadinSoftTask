@@ -30,7 +30,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
     public async Task Adding_New_Product_Should_Save_To_Database()
     {
         var sender = _serviceProvider.GetRequiredService<ISender>();
-        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
         await sender.Send(testUser);
 
         var manager = _serviceProvider.GetRequiredService<IUserManager>();
@@ -53,7 +53,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
     public async Task Getting_User_Product_With_Id_Should_Return_Product()
     {
         var sender = _serviceProvider.GetRequiredService<ISender>();
-        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
         await sender.Send(testUser);
 
         var manager = _serviceProvider.GetRequiredService<IUserManager>();
@@ -74,7 +74,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
     public async Task Editing_Product_With_Valid_User_Id_Should_Success()
     {
         var sender = _serviceProvider.GetRequiredService<ISender>();
-        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
         await sender.Send(testUser);
 
         var manager = _serviceProvider.GetRequiredService<IUserManager>();
@@ -104,7 +104,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
     public async Task Editing_Product_With_InValid_User_Id_Should_Fail()
     {
         var sender = _serviceProvider.GetRequiredService<ISender>();
-        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
         await sender.Send(testUser);
 
         var manager = _serviceProvider.GetRequiredService<IUserManager>();

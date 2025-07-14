@@ -19,7 +19,7 @@ public class IdentityTests : IClassFixture<IdentityTestSetup>
     [Fact]
     public async Task Registering_User_Should_Succeed()
     {
-        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123", "test@test.com", "qwe123");
+        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
 
         var sender = _serviceProvider.GetRequiredService<ISender>();
         var registerResult = await sender.Send(testUser);
@@ -30,7 +30,7 @@ public class IdentityTests : IClassFixture<IdentityTestSetup>
     [Fact]
     public async Task Getting_AccessToken_Should_Succeed()
     {
-        var testUser = new RegisterUserCommand("test", "test", "test", "qwe123!@#", "test@test.com", "qwe123!@#");
+        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
         var sender = _serviceProvider.GetRequiredService<ISender>();
         await sender.Send(testUser);
 
@@ -43,7 +43,7 @@ public class IdentityTests : IClassFixture<IdentityTestSetup>
     [Fact]
     public async Task Registered_User_Should_Exist_In_Database()
     {
-        var testUser = new RegisterUserCommand("test", "test", "TEST3", "qwe123", "test3@test.com", "qwe123");
+        var testUser = new RegisterUserCommand("test", "test", "TEST3", "wsxdr123WS!@", "test3@test.com", "wsxdr123WS!@");
 
         var sender = _serviceProvider.GetRequiredService<ISender>();
         var userManager = _serviceProvider.GetRequiredService<IUserManager>();

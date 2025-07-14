@@ -34,15 +34,24 @@ public class ProductFeaturesTests
     {
         // Arrange
         var faker = new Faker();
-        var product = new CreateProductCommand("name", "+989332426728", faker.Person.Email,
+        var product = new CreateProductCommand("name12", "09332426728", faker.Person.Email,
             DateTime.Now, Guid.NewGuid());
+
+        var unitOfWork = Substitute.For<IUnitOfWork>();
+
+        var mockUserId = Guid.NewGuid();
+        var fakeProduct1 = ProductEntity.Create(Guid.NewGuid(), "name1", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now,
+            mockUserId);
+        var fakeProduct2 = ProductEntity.Create(Guid.NewGuid(), "name2", faker.Person.Phone, faker.Person.Email,
+            DateTime.Now,
+            mockUserId);
+        List<ProductEntity> fakeProducts = [fakeProduct1, fakeProduct2];
 
         var productRepository = Substitute.For<IProductRepository>();
 
-        productRepository.IsProductExistsAsync(product.Name).Returns(Task.FromResult(false));
-
-        var unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.ProductRepository.Returns(productRepository);
+        productRepository.GetByNameAsync(product.Name).Returns(Task.FromResult(fakeProducts));
         var validationBehavior =
             new ValidateRequestBehavior<CreateProductCommand, OperationResult<bool>>(_serviceProvider
                 .GetRequiredService<IValidator<CreateProductCommand>>());
