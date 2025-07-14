@@ -13,13 +13,17 @@ public class CreateProductCommandHandler(IUnitOfWork unitOfWork)
     {
         var products = await unitOfWork.ProductRepository.GetByNameAsync(request.Name, cancellationToken);
 
-        foreach (var product in products)
+        if (products.Count > 0)
         {
-            if (product.ManufactureEmail.Equals(request.ManufactureEmail) &&
-                product.ProduceDate.Equals(request.ProduceDate))
-                return OperationResult<bool>.FailureResult("ProductDate and ManufactureEmail",
-                    "ProductDate and ManufactureEmail Can not be Duplicated");
+            foreach (var product in products)
+            {
+                if (product.ManufactureEmail.Equals(request.ManufactureEmail) &&
+                    product.ProduceDate.Equals(request.ProduceDate))
+                    return OperationResult<bool>.FailureResult("ProductDate and ManufactureEmail",
+                        "ProductDate and ManufactureEmail Can not be Duplicated");
+            }
         }
+
         var newProduct = ProductEntity.Create(request.Name, request.ManufacturePhone,
             request.ManufactureEmail, request.ProduceDate, request.UserId);
 
