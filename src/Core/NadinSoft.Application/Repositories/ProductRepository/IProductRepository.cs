@@ -10,4 +10,6 @@ public interface IProductRepository
     Task<ProductEntity?> GetProductDetailByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> IsProductExistsAsync(string name, CancellationToken cancellationToken = default);
     Task<List<ProductEntity>> GetByNameAsync(string name, CancellationToken cancellationToken = default);
+    Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<List<ProductEntity>> GetAllAsync(CancellationToken cancellationToken = default);
 }
