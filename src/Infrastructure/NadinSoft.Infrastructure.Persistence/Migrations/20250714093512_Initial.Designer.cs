@@ -12,8 +12,8 @@ using NadinSoft.Infrastructure.Persistence;
 namespace NadinSoft.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(NadinSoftDbContext))]
-    [Migration("20250713110908_Add_Identity")]
-    partial class Add_Identity
+    [Migration("20250714093512_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
