@@ -13,7 +13,10 @@ public class EditProductCommandHandler(IUnitOfWork unitOfWork)
         var product = await unitOfWork.ProductRepository.GetProductByIdForUpdateAsync(request.Id, cancellationToken);
 
         if (product is null)
-            return OperationResult<bool>.FailureResult(nameof(EditProductCommand.Id), "Product not found");
+            return OperationResult<bool>.NotFoundResult(nameof(EditProductCommand.Id), "Product not found");
+        
+        if (!product.UserId.Equals(request.UserId))
+            return OperationResult<bool>.FailureResult(nameof(EditProductCommand.UserId), "User Id does not match");
 
         product.Edit(request.Name, request.ManufacturePhone, request.ManufactureEmail, request.ProduceDate);
 
