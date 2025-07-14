@@ -11,7 +11,7 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Host.UseSerilog(LoggingConfiguration.ConfigureLogger);
+builder.Host.UseSerilog(LoggingConfiguration.ConfigureLogger);
 
 builder
     .AddSwagger("v1")
