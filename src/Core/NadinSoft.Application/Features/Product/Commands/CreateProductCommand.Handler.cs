@@ -11,14 +11,19 @@ public class CreateProductCommandHandler(IUnitOfWork unitOfWork)
     public async ValueTask<OperationResult<bool>> Handle(CreateProductCommand request,
         CancellationToken cancellationToken)
     {
-        if (await unitOfWork.ProductRepository.IsProductExistsAsync(request.Name, cancellationToken))
-            return OperationResult<bool>.FailureResult(nameof(request.Name),
-                "This Product Already Exists");
+        var products = await unitOfWork.ProductRepository.GetByNameAsync(request.Name, cancellationToken);
 
-        var product = ProductEntity.Create(request.Name, request.ManufacturePhone,
+        foreach (var product in products)
+        {
+            if (product.ManufactureEmail.Equals(request.ManufactureEmail) &&
+                product.ProduceDate.Equals(request.ProduceDate))
+                return OperationResult<bool>.FailureResult("ProductDate and ManufactureEmail",
+                    "ProductDate and ManufactureEmail Can not be Duplicated");
+        }
+        var newProduct = ProductEntity.Create(request.Name, request.ManufacturePhone,
             request.ManufactureEmail, request.ProduceDate, request.UserId);
 
-        await unitOfWork.ProductRepository.CreateAsync(product, cancellationToken);
+        await unitOfWork.ProductRepository.CreateAsync(newProduct, cancellationToken);
 
         await unitOfWork.CommitAsync(cancellationToken);
         return OperationResult<bool>.SuccessResult(true);
