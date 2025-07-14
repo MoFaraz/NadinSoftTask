@@ -34,7 +34,7 @@ public class ProductFeaturesTests
     {
         // Arrange
         var faker = new Faker();
-        var product = new CreateProductCommand(Guid.NewGuid(), "name", faker.Person.Phone, faker.Person.Email,
+        var product = new CreateProductCommand("name", faker.Person.Phone, faker.Person.Email,
             DateTime.Now, Guid.NewGuid());
 
         var productRepository = Substitute.For<IProductRepository>();
@@ -62,7 +62,7 @@ public class ProductFeaturesTests
     {
         // Arrange
         var faker = new Faker();
-        var product = new CreateProductCommand(Guid.NewGuid(), "name", faker.Person.Phone, faker.Person.Email,
+        var product = new CreateProductCommand("name", faker.Person.Phone, faker.Person.Email,
             DateTime.Now, Guid.NewGuid());
 
         var productRepository = Substitute.For<IProductRepository>();
@@ -162,8 +162,9 @@ public class ProductFeaturesTests
     {
         var faker = new Faker();
         var mockId = Guid.NewGuid();
+        var mockUserId = Guid.NewGuid();
         var productEntityMock = ProductEntity.Create(mockId, "name", faker.Person.Phone, faker.Person.Email,
-            DateTime.Now, Guid.NewGuid());
+            DateTime.Now, mockUserId);
 
         var productRepository = Substitute.For<IProductRepository>();
 
@@ -176,7 +177,7 @@ public class ProductFeaturesTests
         var editedPhoneNumber = faker.Phone.PhoneNumber();
         var editedEmail = faker.Person.Email;
         var editProductCommand =
-            new EditProductCommand(mockId, "name2", editedPhoneNumber, editedEmail, DateTime.Now);
+            new EditProductCommand(mockId, "name2", editedPhoneNumber, editedEmail, DateTime.Now, mockUserId);
 
 
         var validationBehavior =
@@ -218,7 +219,7 @@ public class ProductFeaturesTests
 
 
         var validationBehavior =
-            new ValidateRequestBehavior<GetProductDetailByIdQuery, OperationResult<GetProductDetailByIdResult>>(
+            new ValidateRequestBehavior<GetProductDetailByIdQuery, OperationResult<GetProductDetailByIdQueryResult>>(
                 _serviceProvider
                     .GetRequiredService<IValidator<GetProductDetailByIdQuery>>());
 
