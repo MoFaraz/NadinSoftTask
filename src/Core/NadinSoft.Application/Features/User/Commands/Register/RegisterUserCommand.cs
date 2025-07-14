@@ -17,8 +17,12 @@ public record RegisterUserCommand(
     public IValidator<RegisterUserCommand> Validate(ValidationModelBase<RegisterUserCommand> validator)
     {
         validator.RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage("Email is required.");
-        validator.RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required.");
-        validator.RuleFor(c => c.RepeatPassword).NotEmpty().Equal(c => c.Password).WithMessage("Passwords do not match.");
+        validator.RuleFor(x => x.Password).NotEmpty().WithMessage("Password is required.")
+            .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$")
+            .WithMessage(
+                "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.");
+        validator.RuleFor(c => c.RepeatPassword).NotEmpty().Equal(c => c.Password)
+            .WithMessage("Passwords do not match.");
         validator.RuleFor(c => c.FirstName).NotEmpty().WithMessage("First name is required.");
         validator.RuleFor(c => c.LastName).NotEmpty().WithMessage("Last name is required.");
         validator.RuleFor(c => c.Username).NotEmpty().MinimumLength(3).MaximumLength(15)
