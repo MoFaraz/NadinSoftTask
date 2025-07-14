@@ -11,6 +11,7 @@ using NadinSoft.WebFramework.Models;
 namespace NadinSoft.Api.Controllers.Product.V1;
 
 [ApiController]
+[Authorize]
 [ApiVersion("1")]
 [Route("api/v{version:apiVersion}/products")]
 public class ProductController(ISender sender) : BaseController
@@ -30,9 +31,11 @@ public class ProductController(ISender sender) : BaseController
 
     [HttpPut("EditProduct")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
-    public virtual async Task<IActionResult> EditProduct(EditProductCommand command,
+    public virtual async Task<IActionResult> EditProduct(EditProductApiModel model,
         CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(command with { UserId = base.UserId!.Value}, cancellationToken));
+        => base.OperationResult(await sender.Send(
+            new EditProductCommand(model.Id, model.Name, model.ManufacturePhone, model.ManufactureEmail,
+                model.ProduceDate, base.UserId!.Value), cancellationToken));
 
 
     [HttpGet("Detail")]
@@ -43,7 +46,16 @@ public class ProductController(ISender sender) : BaseController
     [HttpDelete("Delete")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(new DeleteProductByIdCommand(id, base.UserId!.Value), cancellationToken));
+        => base.OperationResult(await sender.Send(new DeleteProductByIdCommand(id, base.UserId!.Value),
+            cancellationToken));
+
+    [HttpPost("ChangeAvailability")]
+    [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ChangeAvailability(ChangeAvailabilityApiModel model,
+        CancellationToken cancellationToken = default)
+        => base.OperationResult(
+            await sender.Send(new ChangeProductAvailabilityCommand(model.Id, model.Availability, base.UserId!.Value),
+                cancellationToken));
 
     [AllowAnonymous]
     [HttpGet("GetAllProduct")]
