@@ -41,4 +41,14 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
         return await base.TableNoTracking.Where(c => c.Name.Contains(name))
             .ToListAsync(cancellationToken);
     }
+
+    public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        await base.DeleteAsync(c => c.Id.Equals(id), cancellationToken);
+    }
+
+    public async Task<List<ProductEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await base.ListAllAsync(cancellationToken);
+    }
 }
