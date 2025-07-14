@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NSwag;
-using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Security;
 
 namespace NadinSoft.WebFramework.Swagger;
@@ -45,7 +44,7 @@ public static class SwaggerConfigurationExtensions
         {
             opt.PersistAuthorization = true;
             opt.EnableTryItOut = true;
-            opt.Path = "/Swagger";
+            opt.Path = "/swagger";
         });
 
         app.UseReDoc(settings =>
