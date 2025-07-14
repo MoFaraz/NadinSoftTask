@@ -5,7 +5,7 @@ using NadinSoft.Application.Common.Validation;
 
 namespace NadinSoft.Application.Features.Product.Queries;
 
-public record GetProductDetailByIdQuery(Guid Id): IRequest<OperationResult<GetProductDetailByIdResult>>, IValidatableModel<GetProductDetailByIdQuery>
+public record GetProductDetailByIdQuery(Guid Id): IRequest<OperationResult<GetProductDetailByIdQueryResult>>, IValidatableModel<GetProductDetailByIdQuery>
 {
     public IValidator<GetProductDetailByIdQuery> Validate(ValidationModelBase<GetProductDetailByIdQuery> validator)
     {
