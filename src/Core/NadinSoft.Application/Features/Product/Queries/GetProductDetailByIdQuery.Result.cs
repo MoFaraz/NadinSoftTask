@@ -4,7 +4,7 @@ using NadinSoft.Domain.Entities.Product;
 
 namespace NadinSoft.Application.Features.Product.Queries;
 
-public record GetProductDetailByIdResult(
+public record GetProductDetailByIdQueryResult(
     Guid Id,
     string Name,
     string ManufacturePhone,
@@ -17,7 +17,7 @@ public record GetProductDetailByIdResult(
 {
     public void Map(Profile profile)
     {
-        profile.CreateMap<ProductEntity, GetProductDetailByIdResult>()
+        profile.CreateMap<ProductEntity, GetProductDetailByIdQueryResult>()
             .ForCtorParam(nameof(Id), opt => opt.MapFrom(src => src.Id))
             .ForCtorParam(nameof(Name), opt => opt.MapFrom(src => src.Name))
             .ForCtorParam(nameof(ManufacturePhone), opt => opt.MapFrom(src => src.ManufacturePhone))
