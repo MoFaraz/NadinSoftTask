@@ -17,13 +17,13 @@ internal class JwtServiceImplementation(IUserClaimsPrincipalFactory<UserEntity> 
     {
         var claims = await claimPrincipalFactory.CreateAsync(user);
         var secretKey = Encoding.UTF8.GetBytes(jwtConfiguration.Value.SignInKey);
-        var encryptionKey = Encoding.UTF8.GetBytes(jwtConfiguration.Value.EncryptionKey);
+        // var encryptionKey = Encoding.UTF8.GetBytes(jwtConfiguration.Value.EncryptionKey);
         var signInCredential = new SigningCredentials(new SymmetricSecurityKey(secretKey), SecurityAlgorithms.HmacSha256Signature);
 
-        var encryptionCredentials = new EncryptingCredentials(
-
-            new SymmetricSecurityKey(encryptionKey), SecurityAlgorithms.Aes128KW, SecurityAlgorithms.Aes128CbcHmacSha256
-        );
+        // var encryptionCredentials = new EncryptingCredentials(
+        //
+        //     new SymmetricSecurityKey(encryptionKey), SecurityAlgorithms.Aes128KW, SecurityAlgorithms.Aes128CbcHmacSha256
+        // );
 
         var descriptor = new SecurityTokenDescriptor()
         {
@@ -34,7 +34,7 @@ internal class JwtServiceImplementation(IUserClaimsPrincipalFactory<UserEntity> 
             NotBefore = DateTime.Now.AddMinutes(0),
             Expires = DateTime.Now.AddMinutes(jwtConfiguration.Value.ExpirationMinutes),
             Subject = new ClaimsIdentity(claims.Claims),
-            EncryptingCredentials = encryptionCredentials,
+            // EncryptingCredentials = encryptionCredentials,
             // TokenType = "JWE",
         };
 
