@@ -15,7 +15,7 @@ public class CreateProductCommandHandler(IUnitOfWork unitOfWork)
             return OperationResult<bool>.FailureResult(nameof(request.Name),
                 "This Product Already Exists");
 
-        var product = ProductEntity.Create(request.Id, request.Name, request.ManufacturePhone,
+        var product = ProductEntity.Create(request.Name, request.ManufacturePhone,
             request.ManufactureEmail, request.ProduceDate, request.UserId);
 
         await unitOfWork.ProductRepository.CreateAsync(product, cancellationToken);

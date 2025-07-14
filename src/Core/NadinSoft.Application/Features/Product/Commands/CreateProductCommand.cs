@@ -6,7 +6,6 @@ using NadinSoft.Application.Common.Validation;
 namespace NadinSoft.Application.Features.Product.Commands;
 
 public record CreateProductCommand(
-    Guid Id,
     string Name,
     string ManufacturePhone,
     string ManufactureEmail,
@@ -15,7 +14,6 @@ public record CreateProductCommand(
 {
     public IValidator<CreateProductCommand> Validate(ValidationModelBase<CreateProductCommand> validator)
     {
-        validator.RuleFor(c => c.Id).NotEmpty();
         validator.RuleFor(c => c.Name).NotEmpty()
             .MinimumLength(4)
             .WithMessage("Name is required");
