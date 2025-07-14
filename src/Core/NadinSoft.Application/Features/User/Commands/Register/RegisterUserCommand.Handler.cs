@@ -11,7 +11,7 @@ public class RegisterUserCommandHandler(IUserManager userManager)
 {
     public async ValueTask<OperationResult<bool>> Handle(RegisterUserCommand request, CancellationToken cancellationToken = default)
     {
-        var user = new UserEntity(request.FirstName, request.LastName, request.Email, request.Password);
+        var user = new UserEntity(request.FirstName, request.LastName, request.Username, request.Email);
 
         var userCreateResult = await userManager.PasswordCreateAsync(user, request.Password, cancellationToken);
         if (userCreateResult.Succeeded)
