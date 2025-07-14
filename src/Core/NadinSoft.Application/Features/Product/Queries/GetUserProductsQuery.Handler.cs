@@ -13,7 +13,7 @@ public class GetUserProductsQueryHandler(IUnitOfWork unitOfWork)
         var products = await unitOfWork.ProductRepository.GetUserProductsAsync(request.UserId, cancellationToken);
 
         var result = products.Select(c =>
-                new GetUserProductsQueryResult(c.Id, c.Name, c.ManufacturePhone, c.ManufactureEmail, c.ProduceDate))
+                new GetUserProductsQueryResult(c.Id, c.Name, c.ManufacturePhone, c.ManufactureEmail, c.IsAvailable, c.ProduceDate))
             .ToList();
         
         return OperationResult<List<GetUserProductsQueryResult>>.SuccessResult(result);

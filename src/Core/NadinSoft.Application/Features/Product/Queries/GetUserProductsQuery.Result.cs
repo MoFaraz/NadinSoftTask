@@ -5,4 +5,5 @@ public record GetUserProductsQueryResult(
     string Name,
     string ManufacturePhone,
     string ManufactureEmail,
+    bool Availability,
     DateTime ProduceDate);

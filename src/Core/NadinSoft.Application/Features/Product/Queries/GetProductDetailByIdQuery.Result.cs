@@ -12,6 +12,7 @@ public record GetProductDetailByIdQueryResult(
     DateTime ProducedDate,
     Guid OwnerId,
     string OwnerUsername,
+    bool Availability,
     DateTime CreatedDate,
     DateTime ModifiedDate) : ICreateApplicationMapper<ProductEntity>
 {
@@ -25,6 +26,7 @@ public record GetProductDetailByIdQueryResult(
             .ForCtorParam(nameof(ProducedDate), opt => opt.MapFrom(src => src.ProduceDate))
             .ForCtorParam(nameof(OwnerId), opt => opt.MapFrom(src => src.UserId))
             .ForCtorParam(nameof(OwnerUsername), opt=> opt.MapFrom(src => src.User.UserName))
+            .ForCtorParam(nameof(Availability), opt => opt.MapFrom(src => src.IsAvailable))
             .ForCtorParam(nameof(CreatedDate), opt => opt.MapFrom(src => src.CreatedDate))
             .ForCtorParam(nameof(ModifiedDate), opt => opt.MapFrom(src => src.ModifiedDate))
             .ReverseMap();
