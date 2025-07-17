@@ -1,3 +1,4 @@
+using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
@@ -30,7 +31,7 @@ public class PersistenceTestSetup : IAsyncLifetime
 
         await db.Database.MigrateAsync();
 
-        UnitOfWork = new UnitOfWork(db);
+
 
         var configs = new Dictionary<string, string>()
         {
@@ -56,6 +57,8 @@ public class PersistenceTestSetup : IAsyncLifetime
             .AddLogging(c => c.AddConsole());
 
         ServiceProvider = serviceCollection.BuildServiceProvider(false);
+        var publisher = ServiceProvider.GetRequiredService<IPublisher>();
+        UnitOfWork = new UnitOfWork(db, publisher);
     }
 
     public async Task DisposeAsync()
