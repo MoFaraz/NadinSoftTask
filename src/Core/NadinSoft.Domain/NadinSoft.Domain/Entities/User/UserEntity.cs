@@ -6,9 +6,6 @@ namespace NadinSoft.Domain.Entities.User;
 
 public sealed class UserEntity : IdentityUser<Guid>, IEntity
 {
-    public DateTime CreatedDate { get; set; }
-    public DateTime ModifiedDate { get; set; }
-
     public string FirstName { get; private set; }
     public string LastName { get; private set; }
 

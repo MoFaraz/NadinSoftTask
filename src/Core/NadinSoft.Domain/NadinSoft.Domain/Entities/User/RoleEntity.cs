@@ -5,9 +5,6 @@ namespace NadinSoft.Domain.Entities.User;
 
 public sealed class RoleEntity: IdentityRole<Guid>, IEntity
 {
-    public DateTime CreatedDate { get; set; }
-    public DateTime ModifiedDate { get; set; }
-    
     public string DisplayName { get; private set; }
 
     public RoleEntity(string displayName, string name): base(name)

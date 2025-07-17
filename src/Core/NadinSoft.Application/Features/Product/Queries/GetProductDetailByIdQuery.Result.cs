@@ -27,8 +27,6 @@ public record GetProductDetailByIdQueryResult(
             .ForCtorParam(nameof(OwnerId), opt => opt.MapFrom(src => src.UserId))
             .ForCtorParam(nameof(OwnerUsername), opt=> opt.MapFrom(src => src.User.UserName))
             .ForCtorParam(nameof(Availability), opt => opt.MapFrom(src => src.IsAvailable))
-            .ForCtorParam(nameof(CreatedDate), opt => opt.MapFrom(src => src.CreatedDate))
-            .ForCtorParam(nameof(ModifiedDate), opt => opt.MapFrom(src => src.ModifiedDate))
             .ReverseMap();
     }
 }

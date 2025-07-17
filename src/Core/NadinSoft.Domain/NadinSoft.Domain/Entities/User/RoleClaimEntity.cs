@@ -5,8 +5,5 @@ namespace NadinSoft.Domain.Entities.User;
 
 public sealed class RoleClaimEntity : IdentityRoleClaim<Guid>, IEntity
 {
-    public DateTime CreatedDate { get; set; }
-    public DateTime ModifiedDate { get; set; }
-    
     public RoleEntity Role { get; set; }
 }
