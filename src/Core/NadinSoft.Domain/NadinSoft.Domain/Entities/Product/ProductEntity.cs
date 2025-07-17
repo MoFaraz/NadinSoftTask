@@ -2,12 +2,13 @@ using System.Text.RegularExpressions;
 using Ardalis.GuardClauses;
 using NadinSoft.Domain.Common;
 using NadinSoft.Domain.Entities.User;
+using NadinSoft.Domain.Events;
 
 namespace NadinSoft.Domain.Entities.Product;
 
 public sealed partial class ProductEntity : BaseEntity<Guid>
 {
-    public string Name { get; private set; } 
+    public string Name { get; private set; }
     public string ManufacturePhone { get; private set; } = string.Empty;
     public string ManufactureEmail { get; private set; } = string.Empty;
     public DateTime ProduceDate { get; private set; }
@@ -44,7 +45,7 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
         Guard.Against.NullOrWhiteSpace(manufactureEmail, message: "ManufactureEmail cannot be null or empty.");
         Guard.Against.NullOrEmpty(userId, message: "UserId cannot be null or empty.");
 
-        return new ProductEntity()
+        var product = new ProductEntity()
         {
             Id = Guid.NewGuid(),
             Name = name,
@@ -54,6 +55,8 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
             ProduceDate = produceDate,
             UserId = userId
         };
+        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id, product.Name, product.UserId));
+        return product;
     }
 
     public static ProductEntity Create(string name, string manufacturePhone, string manufactureEmail,
@@ -64,7 +67,7 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
         Guard.Against.NullOrWhiteSpace(manufactureEmail, message: "ManufactureEmail cannot be null or empty.");
         Guard.Against.Null(user, message: "User cannot be null.");
 
-        return new ProductEntity()
+        var product = new ProductEntity()
         {
             Id = Guid.NewGuid(),
             Name = name,
@@ -75,6 +78,9 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
             UserId = user.Id,
             User = user
         };
+
+        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id, product.Name, product.UserId));
+        return product;
     }
 
     public static ProductEntity Create(Guid id, string name, string manufacturePhone, string manufactureEmail,
@@ -86,7 +92,7 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
         Guard.Against.NullOrWhiteSpace(manufactureEmail, message: "ManufactureEmail cannot be null or empty.");
         Guard.Against.NullOrEmpty(userId, message: "UserId cannot be null or empty.");
 
-        return new ProductEntity()
+        var product = new ProductEntity()
         {
             Id = id,
             Name = name,
@@ -96,6 +102,10 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
             ProduceDate = produceDate,
             UserId = userId
         };
+
+        product.RaiseDomainEvent(new ProductCreatedDomainEvent(product.Id, product.Name, product.UserId));
+
+        return product;
     }
 
     public void Edit(string name, string manufacturePhone, string manufactureEmail,
@@ -109,11 +119,15 @@ public sealed partial class ProductEntity : BaseEntity<Guid>
         ManufacturePhone = manufacturePhone;
         ManufactureEmail = manufactureEmail;
         ProduceDate = produceDate;
+
+        RaiseDomainEvent(new ProductEditedDomainEvent(Id, Name, UserId));
     }
 
     public void ChangeAvailability(bool isAvailable)
     {
         IsAvailable = isAvailable;
+
+        RaiseDomainEvent(new ChangeAvailabilityDomainEvent(Id, Name, UserId));
     }
 
     public override bool Equals(object? product)
