@@ -21,11 +21,13 @@ internal class ProductEntityConfiguration : IEntityTypeConfiguration<ProductEnti
             .HasForeignKey(c => c.UserId);
 
 
-
         builder.HasIndex(c => c.Name);
         builder
             .HasIndex(c => new { c.ManufactureEmail, c.ProduceDate })
             .IsUnique();
+
+        builder.Property<DateTime>("CreatedDate");
+        builder.Property<DateTime>("ModifiedDate");
 
         builder.ToTable("Products", "product");
     }

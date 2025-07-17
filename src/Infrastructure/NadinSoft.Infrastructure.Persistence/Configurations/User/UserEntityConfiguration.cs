@@ -37,6 +37,9 @@ internal class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.HasIndex(c => c.NormalizedEmail);
         builder.HasIndex(c => c.NormalizedUserName);
+
+        builder.Property<DateTime>("CreatedDate");
+        builder.Property<DateTime>("ModifiedDate");
         
         builder.ToTable("Users", "usr");
     }
