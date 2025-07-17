@@ -1,7 +1,6 @@
 using Mediator;
 using Microsoft.Extensions.Logging;
 using NadinSoft.Domain.Events;
-using Serilog;
 
 namespace NadinSoft.Application.Events;
 
