@@ -31,6 +31,7 @@ builder.Services.AddControllers(opt =>
     opt.Filters.Add(typeof(OkResultAttribute));
     opt.Filters.Add(typeof(NotFoundAttribute));
     opt.Filters.Add(typeof(BadResultAttribute));
+    opt.Filters.Add(typeof(ForbiddenResultAttribute));
     opt.Filters.Add(typeof(ModelStateValidationAttribute));
     opt.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult<Dictionary<string, List<string>>>),
         StatusCodes.Status400BadRequest));

@@ -4,15 +4,18 @@ public interface IOperationResult
 {
     bool IsSuccess { get; set; }
     bool IsNotFound { get; set; }
+    bool IsForbidden { get; set; }
     List<KeyValuePair<string, string>> ErrorMessages { get; set; }
 }
 
-public class OperationResult<TResult>: IOperationResult
+public class OperationResult<TResult> : IOperationResult
 {
     public TResult? Result { get; set; }
     public bool IsSuccess { get; set; }
     public bool IsNotFound { get; set; }
+    public bool IsForbidden { get; set; }
     public List<KeyValuePair<string, string>> ErrorMessages { get; set; } = [];
+
 
     public static OperationResult<TResult> SuccessResult(TResult result)
     {
@@ -33,7 +36,7 @@ public class OperationResult<TResult>: IOperationResult
         result.ErrorMessages.Add(new KeyValuePair<string, string>(propertyName, message));
         return result;
     }
-    
+
     public static OperationResult<TResult> FailureResult(List<KeyValuePair<string, string>> errorMessages)
     {
         return new OperationResult<TResult>
@@ -52,6 +55,18 @@ public class OperationResult<TResult>: IOperationResult
             Result = default,
             IsSuccess = false,
             IsNotFound = true,
+        };
+        result.ErrorMessages.Add(new KeyValuePair<string, string>(propertyName, message));
+        return result;
+    }
+
+    public static OperationResult<TResult> ForbiddenResult(string propertyName, string message)
+    {
+        var result = new OperationResult<TResult>()
+        {
+            Result = default,
+            IsForbidden = true,
+            IsSuccess = false
         };
         result.ErrorMessages.Add(new KeyValuePair<string, string>(propertyName, message));
         return result;

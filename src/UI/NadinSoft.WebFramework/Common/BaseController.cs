@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NadinSoft.Application.Common;
 using NadinSoft.WebFramework.Extensions;
@@ -26,6 +27,13 @@ public class BaseController : Controller
 
             var errors = new ValidationProblemDetails(ModelState);
             return NotFound(errors);
+        }
+
+        if (result.IsForbidden)
+        {
+            AddErrors(result);
+            var errors = new ValidationProblemDetails(ModelState);
+            return StatusCode(StatusCodes.Status403Forbidden, errors);
         }
         
         AddErrors(result);

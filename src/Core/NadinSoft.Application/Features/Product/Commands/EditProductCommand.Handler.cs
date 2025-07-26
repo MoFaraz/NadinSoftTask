@@ -16,7 +16,7 @@ public class EditProductCommandHandler(IUnitOfWork unitOfWork)
             return OperationResult<bool>.NotFoundResult(nameof(EditProductCommand.Id), "Product not found");
         
         if (!product.UserId.Equals(request.UserId))
-            return OperationResult<bool>.FailureResult(nameof(EditProductCommand.UserId), "User Id does not match");
+            return OperationResult<bool>.ForbiddenResult(nameof(EditProductCommand.UserId), "User Id does not match");
 
         product.Edit(request.Name, request.ManufacturePhone, request.ManufactureEmail, request.ProduceDate);
 
