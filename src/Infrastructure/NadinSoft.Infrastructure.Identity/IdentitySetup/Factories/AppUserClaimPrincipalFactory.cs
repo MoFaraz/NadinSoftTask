@@ -11,11 +11,13 @@ internal class AppUserClaimPrincipalFactory(
     IOptions<IdentityOptions> options)
     : UserClaimsPrincipalFactory<UserEntity, RoleEntity>(userManager, roleManager, options)
 {
+    private readonly UserManager<UserEntity> _userManager = userManager;
+
     protected override async Task<ClaimsIdentity> GenerateClaimsAsync(UserEntity user)
     {
         
         var claimsIdentity = await base.GenerateClaimsAsync(user);
-        var userRoles = await userManager.GetRolesAsync(user);
+        var userRoles = await _userManager.GetRolesAsync(user);
         
         foreach (var userRole in userRoles)
         {
