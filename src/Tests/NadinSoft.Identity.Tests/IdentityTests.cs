@@ -19,7 +19,7 @@ public class IdentityTests : IClassFixture<IdentityTestSetup>
     [Fact]
     public async Task Registering_User_Should_Succeed()
     {
-        var testUser = new RegisterUserCommand("test", "test", "test", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
+        var testUser = new RegisterUserCommand("test1", "test1", "test1", "wsxdr123WS!@", "test@test.com", "wsxdr123WS!@");
 
         var sender = _serviceProvider.GetRequiredService<ISender>();
         var registerResult = await sender.Send(testUser);
