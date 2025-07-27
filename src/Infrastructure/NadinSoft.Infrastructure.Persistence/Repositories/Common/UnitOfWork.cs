@@ -9,6 +9,8 @@ public class UnitOfWork : IUnitOfWork
 {
     private readonly NadinSoftDbContext _db;
     private readonly IPublisher _publisher;
+    private bool _disposed;
+
 
     public UnitOfWork(NadinSoftDbContext db, IPublisher publisher)
     {
@@ -19,12 +21,18 @@ public class UnitOfWork : IUnitOfWork
 
     public void Dispose()
     {
-        _db.Dispose();
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _db.DisposeAsync();
+        if (!_disposed)
+        {
+            await _db.DisposeAsync();
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
     }
 
     public IProductRepository ProductRepository { get; }
@@ -48,5 +56,22 @@ public class UnitOfWork : IUnitOfWork
 
         foreach (var domainEvent in domainEvents)
             await _publisher.Publish(domainEvent, cancellationToken);
+    }
+    
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            _disposed = true;
+        }
+    }
+    ~UnitOfWork()
+    {
+        Dispose(disposing: false);
     }
 }
