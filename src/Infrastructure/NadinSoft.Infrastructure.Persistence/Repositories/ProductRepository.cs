@@ -47,7 +47,8 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
         await base.DeleteAsync(c => c.Id.Equals(id), cancellationToken);
     }
 
-    public async Task<List<ProductEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<bool> IsUniqueManufactureEmailAndProductDate(string manufactureEmail, DateTime productDate,
+        CancellationToken cancellationToken = default)
     {
         return await base.TableNoTracking.AnyAsync(c =>
             c.ManufactureEmail.Equals(manufactureEmail) && c.ProduceDate.Equals(productDate), cancellationToken);
