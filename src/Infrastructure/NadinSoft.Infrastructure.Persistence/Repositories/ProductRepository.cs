@@ -33,12 +33,12 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
 
     public async Task<bool> IsProductExistsAsync(string name, CancellationToken cancellationToken = default)
     {
-        return await base.TableNoTracking.AnyAsync(c => c.Name.Equals(name), cancellationToken);
+        return await TableNoTracking.AnyAsync(c => c.Name.Equals(name), cancellationToken);
     }
 
     public async Task<List<ProductEntity>> GetByNameAsync(string name, CancellationToken cancellationToken = default)
     {
-        return await base.TableNoTracking.Where(c => c.Name.Contains(name))
+        return await TableNoTracking.Where(c => c.Name.Contains(name))
             .ToListAsync(cancellationToken);
     }
 
@@ -50,7 +50,7 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
     public async Task<bool> IsUniqueManufactureEmailAndProductDate(string manufactureEmail, DateTime productDate,
         CancellationToken cancellationToken = default)
     {
-        return await base.TableNoTracking.AnyAsync(c =>
+        return await TableNoTracking.AnyAsync(c =>
             c.ManufactureEmail.Equals(manufactureEmail) && c.ProduceDate.Equals(productDate), cancellationToken);
     }
 
@@ -62,6 +62,6 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
             query = query.Where(c => c.User.UserName!.Equals(username));
 
         query = query.Skip((page - 1) * pageSize).Take(pageSize);
-        return await query.ToListAsync(cancellationToken);
+        return await query.Include(c => c.User).ToListAsync(cancellationToken);
     }
 }
