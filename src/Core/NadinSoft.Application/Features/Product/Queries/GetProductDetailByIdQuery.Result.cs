@@ -12,9 +12,7 @@ public record GetProductDetailByIdQueryResult(
     DateTime ProducedDate,
     Guid OwnerId,
     string OwnerUsername,
-    bool Availability,
-    DateTime CreatedDate,
-    DateTime ModifiedDate) : ICreateApplicationMapper<ProductEntity>
+    bool Availability) : ICreateApplicationMapper<ProductEntity>
 {
     public void Map(Profile profile)
     {
