@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Mvc;
 using NadinSoft.Application.Extensions;
 using NadinSoft.Infrastructure.CrossCutting.Logging;
@@ -38,17 +39,18 @@ builder.Services.AddControllers(opt =>
 
     opt.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult),
         StatusCodes.Status401Unauthorized));
-    
+
     opt.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult),
         StatusCodes.Status403Forbidden));
-    
+
     opt.Filters.Add(new ProducesResponseTypeAttribute(typeof(ApiResult),
         StatusCodes.Status500InternalServerError));
 }).ConfigureApiBehaviorOptions(opt =>
 {
-   opt.SuppressModelStateInvalidFilter = true; 
-   opt.SuppressMapClientErrors = true;
+    opt.SuppressModelStateInvalidFilter = true;
+    opt.SuppressMapClientErrors = true;
 });
+builder.Services.AddRateLimiting(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
@@ -60,8 +62,10 @@ if (app.Environment.IsDevelopment())
     await app.ApplyMigrationsAsync();
 }
 
+app.UseIpRateLimiting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllers();
 
