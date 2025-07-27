@@ -64,6 +64,8 @@ public static class ApplicationServiceCollectionExtensions
         });
 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidateRequestBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggingBehavior<,>));
+
         return services;
     }
 }
