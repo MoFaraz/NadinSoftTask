@@ -14,13 +14,13 @@ namespace NadinSoft.Api.Controllers.User.V1;
 [Route("api/v{version:apiVersion}/users")]
 public class UserController(ISender sender) : BaseController
 {
-    [HttpPost("Register")]
+    [HttpPost("register")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public virtual async Task<IActionResult> Register(RegisterUserCommand command,
         CancellationToken cancellationToken = default) =>
         base.OperationResult(await sender.Send(command, cancellationToken));
 
-    [HttpPost("TokenRequest")]
+    [HttpPost("token-request")]
     [ProducesResponseType(typeof(ApiResult<JwtAccessTokenModel>), StatusCodes.Status200OK)]
     public virtual async Task<IActionResult> TokenRequest(UserPasswordLoginQuery query,
         CancellationToken cancellationToken = default) => base.OperationResult(await sender.Send(query, cancellationToken));

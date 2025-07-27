@@ -16,52 +16,52 @@ namespace NadinSoft.Api.Controllers.Product.V1;
 [Route("api/v{version:apiVersion}/products")]
 public class ProductController(ISender sender) : BaseController
 {
-    [HttpPost("Create")]
+    [HttpPost("")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(CreateProductApiModel model, CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(
+        => OperationResult(await sender.Send(
             new CreateProductCommand(model.Name, model.ManufacturePhone, model.ManufactureEmail, model.ProduceDate,
-                base.UserId!.Value), cancellationToken));
+                UserId!.Value), cancellationToken));
 
-    [HttpGet("UserProducts")]
+    [HttpGet("user-product")]
     [ProducesResponseType(typeof(ApiResult<List<GetUserProductsQueryResult>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserProducts(CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(new GetUserProductsQuery(base.UserId!.Value), cancellationToken));
+        => OperationResult(await sender.Send(new GetUserProductsQuery(UserId!.Value), cancellationToken));
 
 
-    [HttpPut("EditProduct")]
+    [HttpPut("{id}")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
-    public virtual async Task<IActionResult> EditProduct(EditProductApiModel model,
+    public virtual async Task<IActionResult> EditProduct(Guid id, EditProductApiModel model,
         CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(
-            new EditProductCommand(model.Id, model.Name, model.ManufacturePhone, model.ManufactureEmail,
-                model.ProduceDate, base.UserId!.Value), cancellationToken));
+        => OperationResult(await sender.Send(
+            new EditProductCommand(id, model.Name, model.ManufacturePhone, model.ManufactureEmail,
+                model.ProduceDate, UserId!.Value), cancellationToken));
 
 
-    [HttpGet("Detail")]
+    [HttpGet("{id}")]
     [ProducesResponseType(typeof(ApiResult<GetProductDetailByIdQueryResult>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetDetailById(Guid id, CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(new GetProductDetailByIdQuery(id), cancellationToken));
+        => OperationResult(await sender.Send(new GetProductDetailByIdQuery(id), cancellationToken));
 
-    [HttpDelete("Delete")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(new DeleteProductByIdCommand(id, base.UserId!.Value),
+        => OperationResult(await sender.Send(new DeleteProductByIdCommand(id, UserId!.Value),
             cancellationToken));
 
-    [HttpPost("ChangeAvailability")]
+    [HttpPost("change-availability/{id}")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ChangeAvailability(ChangeAvailabilityApiModel model,
+    public async Task<IActionResult> ChangeAvailability(Guid id,ChangeAvailabilityApiModel model,
         CancellationToken cancellationToken = default)
-        => base.OperationResult(
-            await sender.Send(new ChangeProductAvailabilityCommand(model.Id, model.Availability, base.UserId!.Value),
+        => OperationResult(
+            await sender.Send(new ChangeProductAvailabilityCommand(id, model.Availability, UserId!.Value),
                 cancellationToken));
 
     [AllowAnonymous]
-    [HttpGet("GetAllProduct")]
+    [HttpGet("")]
     [ProducesResponseType(typeof(ApiResult<List<GetAllProductsQueryResult>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductModel model,
         CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(new GetAllProductsQuery(model.Username, model.Page, model.PageSize),
+        => OperationResult(await sender.Send(new GetAllProductsQuery(model.Username, model.Page, model.PageSize),
             cancellationToken));
 }
