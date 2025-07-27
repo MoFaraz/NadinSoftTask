@@ -17,6 +17,7 @@ namespace NadinSoft.Api.Controllers.Product.V1;
 public class ProductController(ISender sender) : BaseController
 {
     [HttpPost("")]
+    [EndpointName("CreateProduct")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(CreateProductApiModel model, CancellationToken cancellationToken = default)
         => OperationResult(await sender.Send(
@@ -24,12 +25,14 @@ public class ProductController(ISender sender) : BaseController
                 UserId!.Value), cancellationToken));
 
     [HttpGet("user-product")]
+    [EndpointName("GetUserProducts")]
     [ProducesResponseType(typeof(ApiResult<List<GetUserProductsQueryResult>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserProducts(CancellationToken cancellationToken = default)
         => OperationResult(await sender.Send(new GetUserProductsQuery(UserId!.Value), cancellationToken));
 
 
     [HttpPut("{id}")]
+    [EndpointName("UpdateProduct")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public virtual async Task<IActionResult> EditProduct(Guid id, EditProductApiModel model,
         CancellationToken cancellationToken = default)
@@ -39,17 +42,20 @@ public class ProductController(ISender sender) : BaseController
 
 
     [HttpGet("{id}")]
+    [EndpointName("GetProduct")]
     [ProducesResponseType(typeof(ApiResult<GetProductDetailByIdQueryResult>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetDetailById(Guid id, CancellationToken cancellationToken = default)
-        => OperationResult(await sender.Send(new GetProductDetailByIdQuery(id), cancellationToken));
+        => OperationResult(await sender.Send(new GetProductByIdQuery(id), cancellationToken));
 
     [HttpDelete("{id}")]
+    [EndpointName("DeleteProduct")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
         => OperationResult(await sender.Send(new DeleteProductByIdCommand(id, UserId!.Value),
             cancellationToken));
 
     [HttpPost("change-availability/{id}")]
+    [EndpointName("ChangeAvailability")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> ChangeAvailability(Guid id,ChangeAvailabilityApiModel model,
         CancellationToken cancellationToken = default)
@@ -59,6 +65,7 @@ public class ProductController(ISender sender) : BaseController
 
     [AllowAnonymous]
     [HttpGet("")]
+    [EndpointName("GetAllProducts")]
     [ProducesResponseType(typeof(ApiResult<List<GetAllProductsQueryResult>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductModel model,
         CancellationToken cancellationToken = default)
