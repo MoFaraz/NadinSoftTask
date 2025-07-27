@@ -49,6 +49,18 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
 
     public async Task<List<ProductEntity>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await base.ListAllAsync(cancellationToken);
+        return await base.TableNoTracking.AnyAsync(c =>
+            c.ManufactureEmail.Equals(manufactureEmail) && c.ProduceDate.Equals(productDate), cancellationToken);
+    }
+
+    public async Task<List<ProductEntity>> GetAllAsync(string? username, int page = 1, int pageSize = 10,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<ProductEntity> query = TableNoTracking;
+        if (!string.IsNullOrWhiteSpace(username))
+            query = query.Where(c => c.User.UserName!.Equals(username));
+
+        query = query.Skip((page - 1) * pageSize).Take(pageSize);
+        return await query.ToListAsync(cancellationToken);
     }
 }

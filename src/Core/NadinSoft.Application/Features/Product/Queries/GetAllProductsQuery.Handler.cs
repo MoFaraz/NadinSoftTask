@@ -10,10 +10,13 @@ public class GetAllProductsQueryHandler(IUnitOfWork unitOfWork)
     public async ValueTask<OperationResult<List<GetAllProductsQueryResult>>> Handle(GetAllProductsQuery request,
         CancellationToken cancellationToken)
     {
-        var products = await unitOfWork.ProductRepository.GetAllAsync(cancellationToken);
+        var products =
+            await unitOfWork.ProductRepository.GetAllAsync(request.Username, request.Page, request.PageSize,
+                cancellationToken);
 
         var result = products.Select(c =>
-                new GetAllProductsQueryResult(c.Id, c.Name, c.ManufacturePhone, c.ManufactureEmail, c.IsAvailable, c.ProduceDate))
+                new GetAllProductsQueryResult(c.Id, c.Name, c.ManufacturePhone, c.ManufactureEmail, c.IsAvailable,
+                    c.User.UserName! ,c.ProduceDate))
             .ToList();
 
         return OperationResult<List<GetAllProductsQueryResult>>.SuccessResult(result);

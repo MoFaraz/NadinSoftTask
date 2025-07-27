@@ -60,6 +60,8 @@ public class ProductController(ISender sender) : BaseController
     [AllowAnonymous]
     [HttpGet("GetAllProduct")]
     [ProducesResponseType(typeof(ApiResult<List<GetAllProductsQueryResult>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllProducts(CancellationToken cancellationToken = default)
-        => base.OperationResult(await sender.Send(new GetAllProductsQuery(), cancellationToken));
+    public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductModel model,
+        CancellationToken cancellationToken = default)
+        => base.OperationResult(await sender.Send(new GetAllProductsQuery(model.Username, model.Page, model.PageSize),
+            cancellationToken));
 }
