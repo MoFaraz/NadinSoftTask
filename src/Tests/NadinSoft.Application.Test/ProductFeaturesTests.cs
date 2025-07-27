@@ -215,7 +215,7 @@ public class ProductFeaturesTests
             DateTime.Now, mockUser);
 
         var productRepository = Substitute.For<IProductRepository>();
-
+        
         productRepository.GetProductDetailByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
@@ -223,12 +223,6 @@ public class ProductFeaturesTests
 
         var getProductDetailQuery =
             new GetProductDetailByIdQuery(productEntityMock.Id);
-
-
-        var validationBehavior =
-            new ValidateRequestBehavior<GetProductDetailByIdQuery, OperationResult<GetProductDetailByIdQueryResult>>(
-                _serviceProvider
-                    .GetRequiredService<IValidator<GetProductDetailByIdQuery>>());
 
         var mapper = _serviceProvider.GetRequiredService<IMapper>();
         var getProductDetailHandler = new GetProductDetailByIdHandler(unitOfWork, mapper);
