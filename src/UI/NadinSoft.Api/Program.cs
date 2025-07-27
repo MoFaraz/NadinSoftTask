@@ -1,5 +1,6 @@
 using AspNetCoreRateLimit;
 using Microsoft.AspNetCore.Mvc;
+using NadinSoft.Application.Common.Abstractions;
 using NadinSoft.Application.Extensions;
 using NadinSoft.Infrastructure.CrossCutting.Logging;
 using NadinSoft.Infrastructure.Identity.Extensions;
@@ -7,6 +8,7 @@ using NadinSoft.Infrastructure.Persistence.Extensions;
 using NadinSoft.WebFramework.Extensions;
 using NadinSoft.WebFramework.Filters;
 using NadinSoft.WebFramework.Models;
+using NadinSoft.WebFramework.Services;
 using NadinSoft.WebFramework.Swagger;
 using Serilog;
 
@@ -26,6 +28,7 @@ builder.Services
     .AddPersistenceDbContext(builder.Configuration);
 
 builder.ConfigureAuthenticationAndAuthorization();
+
 
 builder.Services.AddControllers(opt =>
 {
@@ -51,6 +54,8 @@ builder.Services.AddControllers(opt =>
     opt.SuppressMapClientErrors = true;
 });
 builder.Services.AddRateLimiting(builder.Configuration);
+builder.Services.AddScoped<ILinkService, LinkService>();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
