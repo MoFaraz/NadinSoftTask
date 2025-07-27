@@ -16,8 +16,8 @@ public class DeleteProductByIdCommandHandler(IUnitOfWork unitOfWork)
             return OperationResult<bool>.NotFoundResult(nameof(DeleteProductByIdCommand.Id), "Product not found");
 
         if (!product.UserId.Equals(request.UserId))
-            return OperationResult<bool>.FailureResult(nameof(DeleteProductByIdCommand.UserId),
-                "User Id Does Not Match");
+            return OperationResult<bool>.ForbiddenResult(nameof(DeleteProductByIdCommand.UserId),
+                "You Can Only Delete Products That You Have Created.");
 
         await unitOfWork.ProductRepository.DeleteByIdAsync(request.Id, cancellationToken);
         await unitOfWork.CommitAsync(cancellationToken);

@@ -17,8 +17,8 @@ public class ChangeProductAvailabilityCommandHandler(IUnitOfWork unitOfWork)
                 "Product not found");
 
         if (!product.UserId.Equals(request.UserId))
-            return OperationResult<bool>.FailureResult(nameof(ChangeProductAvailabilityCommand.UserId),
-                "User Id does not match");
+            return OperationResult<bool>.ForbiddenResult(nameof(ChangeProductAvailabilityCommand.UserId),
+                "You Can Only Change Product That You Have Created.");
 
         product.ChangeAvailability(request.IsAvailable);
         await unitOfWork.CommitAsync(cancellationToken);
