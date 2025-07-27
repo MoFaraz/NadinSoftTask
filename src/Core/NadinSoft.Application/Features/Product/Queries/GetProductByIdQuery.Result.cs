@@ -5,5 +5,6 @@ public record GetProductByIdQueryResult(
     string ManufacturePhone,
     string ManufactureEmail,
     bool IsAvailable,
+    string Username,
     DateTime ProduceDate
 );
