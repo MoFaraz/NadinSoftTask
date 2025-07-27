@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NadinSoft.Application.Common;
+using NadinSoft.Application.Common.Abstractions;
 using NadinSoft.Application.Common.MappingConfiguration;
 using NadinSoft.Application.Extensions;
 using NadinSoft.Application.Features.Common;
@@ -219,13 +220,14 @@ public class ProductFeaturesTests
         productRepository.GetProductDetailByIdAsync(productEntityMock.Id)!.Returns(Task.FromResult(productEntityMock));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
+        var linkService = Substitute.For<ILinkService>();
         unitOfWork.ProductRepository.Returns(productRepository);
 
         var getProductDetailQuery =
-            new GetProductDetailByIdQuery(productEntityMock.Id);
+            new GetProductByIdQuery(productEntityMock.Id);
 
         var mapper = _serviceProvider.GetRequiredService<IMapper>();
-        var getProductDetailHandler = new GetProductDetailByIdHandler(unitOfWork, mapper);
+        var getProductDetailHandler = new GetProductDetailByIdHandler(unitOfWork, mapper, linkService);
 
         // Act
         var result =
