@@ -3,7 +3,6 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NadinSoft.Application.Common;
 using NadinSoft.Application.Common.Abstractions;
-using NadinSoft.Application.Common.MappingConfiguration;
 using NadinSoft.Application.Extensions;
 using NadinSoft.Application.Features.Common;
 using NadinSoft.Application.Features.Product.Commands;
@@ -48,11 +47,13 @@ public class ProductFeaturesTests
             DateTime.Now,
             mockUserId);
         List<ProductEntity> fakeProducts = [fakeProduct1, fakeProduct2];
+        
+        var pageResult = PageResult<ProductEntity>.Create(fakeProducts, 2, 1, 10);
 
         var productRepository = Substitute.For<IProductRepository>();
 
         unitOfWork.ProductRepository.Returns(productRepository);
-        productRepository.GetByNameAsync(product.Name).Returns(Task.FromResult(fakeProducts));
+        productRepository.GetByNameAsync(product.Name).Returns(Task.FromResult(pageResult));
         var validationBehavior =
             new ValidateRequestBehavior<CreateProductCommand, OperationResult<bool>>(_serviceProvider
                 .GetRequiredService<IValidator<CreateProductCommand>>());
@@ -110,25 +111,27 @@ public class ProductFeaturesTests
             Guid.NewGuid());
         List<ProductEntity> fakeProducts = [fakeProduct1, fakeProduct2];
 
+        var pageResult = PageResult<ProductEntity>.Create(fakeProducts, 2, 1, 10);
         var productRepository = Substitute.For<IProductRepository>();
 
-        productRepository.GetByNameAsync(product.SearchTerm).Returns(Task.FromResult(fakeProducts));
+        productRepository.GetByNameAsync(product.SearchTerm).Returns(Task.FromResult(pageResult));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
+        var linkService = Substitute.For<ILinkService>();
         unitOfWork.ProductRepository.Returns(productRepository);
         var validationBehavior =
-            new ValidateRequestBehavior<GetProductByNameQuery, OperationResult<List<GetProductByNameQueryResult>>>(
+            new ValidateRequestBehavior<GetProductByNameQuery, OperationResult<PageResult<GetProductByNameQueryResult>>>(
                 _serviceProvider
                     .GetRequiredService<IValidator<GetProductByNameQuery>>());
 
-        var getProductByNameQueryHandler = new GetProductByNameQueryHandler(unitOfWork);
+        var getProductByNameQueryHandler = new GetProductByNameQueryHandler(unitOfWork, linkService);
 
         // Act
         var getProductResult =
             await validationBehavior.Handle(product, CancellationToken.None, getProductByNameQueryHandler.Handle);
 
         // Assert
-        getProductResult.Result.Should().NotBeEmpty();
+        getProductResult.Result!.Items.Should().NotBeEmpty();
     }
 
     [Fact]
@@ -146,17 +149,19 @@ public class ProductFeaturesTests
         List<ProductEntity> fakeProducts = [fakeProduct1, fakeProduct2];
 
         var productRepository = Substitute.For<IProductRepository>();
+        var pageResult = PageResult<ProductEntity>.Create(fakeProducts, 2, 1, 10);
 
-        productRepository.GetByNameAsync(product.SearchTerm).Returns(Task.FromResult(fakeProducts));
+        productRepository.GetByNameAsync(product.SearchTerm).Returns(Task.FromResult(pageResult));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
+        var linkService = Substitute.For<ILinkService>();
         unitOfWork.ProductRepository.Returns(productRepository);
         var validationBehavior =
-            new ValidateRequestBehavior<GetProductByNameQuery, OperationResult<List<GetProductByNameQueryResult>>>(
+            new ValidateRequestBehavior<GetProductByNameQuery, OperationResult<PageResult<GetProductByNameQueryResult>>>(
                 _serviceProvider
                     .GetRequiredService<IValidator<GetProductByNameQuery>>());
 
-        var getProductByNameQueryHandler = new GetProductByNameQueryHandler(unitOfWork);
+        var getProductByNameQueryHandler = new GetProductByNameQueryHandler(unitOfWork, linkService);
 
         // Act
         var getProductResult =
@@ -284,20 +289,22 @@ public class ProductFeaturesTests
         List<ProductEntity> fakeProducts = [fakeProduct1, fakeProduct2];
 
         var productRepository = Substitute.For<IProductRepository>();
+        var pageResult = PageResult<ProductEntity>.Create(fakeProducts, 2, 1, 10);
 
-        productRepository.GetByNameAsync(userProductQuery.SearchTerm).Returns(Task.FromResult(fakeProducts));
+        productRepository.GetByNameAsync(userProductQuery.SearchTerm).Returns(Task.FromResult(pageResult));
 
         var unitOfWork = Substitute.For<IUnitOfWork>();
+        var linkService = Substitute.For<ILinkService>();
         unitOfWork.ProductRepository.Returns(productRepository);
 
-        var userProductHandler = new GetProductByNameQueryHandler(unitOfWork);
+        var userProductHandler = new GetProductByNameQueryHandler(unitOfWork, linkService);
 
         // Act
         var getProductResult =
             await Helpers.ValidateAndExecuteAsync(userProductQuery, userProductHandler, _serviceProvider);
 
         // Assert
-        getProductResult.Result.Should().NotBeEmpty();
-        getProductResult.Result.Count.Should().Be(fakeProducts.Count);
+        getProductResult.Result!.Items.Should().NotBeEmpty();
+        getProductResult.Result.Items.Count.Should().Be(fakeProducts.Count);
     }
 }

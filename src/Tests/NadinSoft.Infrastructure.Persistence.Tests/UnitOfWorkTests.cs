@@ -66,7 +66,8 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
         await _unitOfWork.ProductRepository.CreateAsync(product);
 
         await _unitOfWork.CommitAsync();
-        var products = await _unitOfWork.ProductRepository.GetUserProductsAsync(user!.Id, CancellationToken.None);
+        var products =
+            await _unitOfWork.ProductRepository.GetUserProductsAsync(user!.Id, 1, 10, CancellationToken.None);
 
         products.Should().NotBeNull();
     }
@@ -88,7 +89,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
 
         await _unitOfWork.CommitAsync();
         var productInDb = await _unitOfWork.ProductRepository.GetByNameAsync("product");
-        var myProduct = productInDb.First();
+        var myProduct = productInDb.Items[0];
 
         var editCommand = new EditProductCommand(myProduct.Id, "test2", myProduct.ManufacturePhone,
             myProduct.ManufactureEmail, myProduct.ProduceDate, myProduct.UserId);
@@ -98,7 +99,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
 
         var productInDb2 = await _unitOfWork.ProductRepository.GetByNameAsync("test2");
         editResult.IsSuccess.Should().BeTrue();
-        productInDb2.Count.Should().BeGreaterThan(0);
+        productInDb2.TotalCount.Should().BeGreaterThan(0);
     }
 
     [Fact]
@@ -118,7 +119,7 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
 
         await _unitOfWork.CommitAsync();
         var productInDb = await _unitOfWork.ProductRepository.GetByNameAsync("product");
-        var myProduct = productInDb.First();
+        var myProduct = productInDb.Items[0];
 
         var editCommand = new EditProductCommand(myProduct.Id, "test2", myProduct.ManufacturePhone,
             myProduct.ManufactureEmail, myProduct.ProduceDate, Guid.NewGuid());
@@ -175,12 +176,12 @@ public class UnitOfWorkTests : IClassFixture<PersistenceTestSetup>
             new EditProductCommand(entry.Entity.Id, "name", "09332426728", "mopharaz@gmail.com", DateTime.Now, user.Id);
 
         await sender.Send(editCommand);
-        
-        await _unitOfWork.CommitAsync();       
-        
+
+        await _unitOfWork.CommitAsync();
+
         var modifiedEntry = context.Entry(product);
         var modifiedDate = modifiedEntry.Property<DateTime>("ModifiedDate").CurrentValue;
-        
+
         _outputHelper.WriteLine(modifiedDate.ToString(CultureInfo.InvariantCulture));
     }
 }
