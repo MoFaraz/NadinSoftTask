@@ -73,14 +73,16 @@ dotnet test
 NadinSoftTask/
 │
 ├── src/
-│   ├── Api/                   # ASP.NET Core Web API
-│   ├── Application/           # Application logic (CQRS, DTOs, Interfaces)
-│   ├── Domain/                # Domain models and interfaces
+│   ├── Core          
+│   │   ├── Application/           # Application logic (CQRS, DTOs, Interfaces)
+│   │   └── Domain/                # Domain models and interfaces
 │   ├── Infrastructure/
 │   │   ├── Identity/          # Identity & JWT setup
 │   │   ├── Persistence/       # EF Core + Fluent API
 │   │   └── CrossCutting/      # Common tools, services, logging, etc.
-│   └── WebFramework/          # API setup, filters, middleware
+│   └── UI/    
+│       ├── Api                # ASP.NET Core Web API
+│       └── WebFrameWrok       # API setup, filters, middleware
 │
 ├── tests/
 │   ├── Application.Tests/
