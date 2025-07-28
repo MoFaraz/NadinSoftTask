@@ -6,7 +6,7 @@ using NadinSoft.Application.Common.Validation;
 namespace NadinSoft.Application.Features.Product.Queries;
 
 public record GetAllProductsQuery(string? Username, int Page = 1, int PageSize = 10)
-    : IRequest<OperationResult<List<GetAllProductsQueryResult>>>,
+    : IRequest<OperationResult<PageResult<GetAllProductsQueryResult>>>,
         IValidatableModel<GetAllProductsQuery>
 {
     public IValidator<GetAllProductsQuery> Validate(ValidationModelBase<GetAllProductsQuery> validator)

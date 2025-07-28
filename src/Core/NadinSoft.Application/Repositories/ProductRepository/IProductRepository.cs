@@ -12,5 +12,5 @@ public interface IProductRepository
     Task<List<ProductEntity>> GetByNameAsync(string name, CancellationToken cancellationToken = default);
     Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> IsUniqueManufactureEmailAndProductDate(string manufactureEmail, DateTime productDate, CancellationToken cancellationToken = default);
-    Task<List<ProductEntity>> GetAllAsync(string? username, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default);
+    Task<PageResult<ProductEntity>> GetAllAsync(string? username, int page = 1, int pageSize = 10, CancellationToken cancellationToken = default);
 }
