@@ -80,7 +80,7 @@ public class ProductController(ISender sender) : BaseController
     [HttpGet("")]
     [EndpointName("GetAllProducts")]
     [ProducesResponseType(typeof(ApiResult<PageResult<GetAllProductsQueryResult>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllProducts([FromRoute] GetAllProductModel model,
+    public async Task<IActionResult> GetAllProducts([FromQuery] GetAllProductModel model,
         CancellationToken cancellationToken = default)
         => OperationResult(await sender.Send(new GetAllProductsQuery(model.Username, model.Page, model.PageSize),
             cancellationToken));
