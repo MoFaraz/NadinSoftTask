@@ -16,7 +16,7 @@ public class EditProductCommandHandler(IUnitOfWork unitOfWork)
             return OperationResult<bool>.NotFoundResult(nameof(EditProductCommand.Id), "Product not found");
         
         if (!product.UserId.Equals(request.UserId))
-            return OperationResult<bool>.ForbiddenResult(nameof(EditProductCommand.UserId), "You Can Only Delete Products That You Have Created.");
+            return OperationResult<bool>.ForbiddenResult(nameof(EditProductCommand.UserId), "You Can Only Edit Products That You Have Created.");
 
         product.Edit(request.Name, request.ManufacturePhone, request.ManufactureEmail, request.ProduceDate);
 

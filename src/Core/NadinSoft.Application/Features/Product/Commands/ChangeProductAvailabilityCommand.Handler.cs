@@ -18,7 +18,7 @@ public class ChangeProductAvailabilityCommandHandler(IUnitOfWork unitOfWork)
 
         if (!product.UserId.Equals(request.UserId))
             return OperationResult<bool>.ForbiddenResult(nameof(ChangeProductAvailabilityCommand.UserId),
-                "You Can Only Change Product That You Have Created.");
+                "You Can Only Change Availability Product That You Have Created.");
 
         product.ChangeAvailability(request.IsAvailable);
         await unitOfWork.CommitAsync(cancellationToken);
