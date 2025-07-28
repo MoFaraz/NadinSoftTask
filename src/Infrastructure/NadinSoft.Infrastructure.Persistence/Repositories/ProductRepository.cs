@@ -18,10 +18,15 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
         return await Table.FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
     }
 
-    public async Task<List<ProductEntity>> GetUserProductsAsync(Guid userId,
+    public async Task<PageResult<ProductEntity>> GetUserProductsAsync(Guid userId, int page, int pageSize,
         CancellationToken cancellationToken = default)
     {
-        return await TableNoTracking.Where(c => c.UserId.Equals(userId)).ToListAsync(cancellationToken);
+        var query = TableNoTracking.Where(c => c.UserId.Equals(userId));
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+
+        return PageResult<ProductEntity>.Create(items, totalCount, page, pageSize);
     }
 
     public async Task<ProductEntity?> GetProductDetailByIdAsync(Guid id, CancellationToken cancellationToken = default)

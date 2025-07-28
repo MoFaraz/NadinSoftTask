@@ -27,8 +27,10 @@ public class ProductController(ISender sender) : BaseController
     [HttpGet("user-product")]
     [EndpointName("GetUserProducts")]
     [ProducesResponseType(typeof(ApiResult<List<GetUserProductsQueryResult>>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetUserProducts(CancellationToken cancellationToken = default)
-        => OperationResult(await sender.Send(new GetUserProductsQuery(UserId!.Value), cancellationToken));
+    public async Task<IActionResult> GetUserProducts([FromQuery] GetUserProductsModel model,
+        CancellationToken cancellationToken = default)
+        => OperationResult(await sender.Send(new GetUserProductsQuery(UserId!.Value, model.Page, model.PageSize),
+            cancellationToken));
 
 
     [HttpPut("{id}")]
