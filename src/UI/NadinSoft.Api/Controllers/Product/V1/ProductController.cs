@@ -3,6 +3,7 @@ using Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NadinSoft.Api.Models.Product;
+using NadinSoft.Application.Common;
 using NadinSoft.Application.Features.Product.Commands;
 using NadinSoft.Application.Features.Product.Queries;
 using NadinSoft.WebFramework.Common;
@@ -59,11 +60,21 @@ public class ProductController(ISender sender) : BaseController
     [HttpPost("change-availability/{id}")]
     [EndpointName("ChangeAvailability")]
     [ProducesResponseType(typeof(ApiResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ChangeAvailability(Guid id,ChangeAvailabilityApiModel model,
+    public async Task<IActionResult> ChangeAvailability(Guid id, ChangeAvailabilityApiModel model,
         CancellationToken cancellationToken = default)
         => OperationResult(
             await sender.Send(new ChangeProductAvailabilityCommand(id, model.Availability, UserId!.Value),
                 cancellationToken));
+
+    [AllowAnonymous]
+    [HttpGet("search")]
+    [EndpointName("SearchProducts")]
+    [ProducesResponseType(typeof(ApiResult<List<GetAllProductsQueryResult>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> SearchProduct([FromQuery] SearchProductModel model,
+        CancellationToken cancellationToken = default)
+        => OperationResult(await sender.Send(new GetProductByNameQuery(model.SearchTerm, model.Page, model.PageSize),
+            cancellationToken));
+
 
     [AllowAnonymous]
     [HttpGet("")]

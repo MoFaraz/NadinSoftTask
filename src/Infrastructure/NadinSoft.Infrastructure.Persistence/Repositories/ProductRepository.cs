@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NadinSoft.Application.Common;
 using NadinSoft.Application.Repositories.ProductRepository;
 using NadinSoft.Domain.Entities.Product;
 using NadinSoft.Infrastructure.Persistence.Repositories.Common;
@@ -41,10 +42,15 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
         return await TableNoTracking.AnyAsync(c => c.Name.Equals(name), cancellationToken);
     }
 
-    public async Task<List<ProductEntity>> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+    public async Task<PageResult<ProductEntity>> GetByNameAsync(string name, int page, int pageSize,
+        CancellationToken cancellationToken = default)
     {
-        return await TableNoTracking.Where(c => c.Name.Contains(name))
+        var query = TableNoTracking.Where(c => c.Name.Contains(name));
+        var totalCount = await query.CountAsync(cancellationToken);
+        var items = await query.Skip((page - 1) * pageSize).Take(pageSize).Include(c => c.User)
             .ToListAsync(cancellationToken);
+
+        return PageResult<ProductEntity>.Create(items, totalCount, page, pageSize);
     }
 
     public async Task DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default)
@@ -67,8 +73,6 @@ internal class ProductRepository(NadinSoftDbContext db) : BaseRepository<Product
         if (!string.IsNullOrWhiteSpace(username))
             query = query.Where(c => c.User.UserName!.Equals(username));
 
-        query = query.Skip((page - 1) * pageSize).Take(pageSize);
-        return await query.Include(c => c.User).ToListAsync(cancellationToken);
         var items = await query.Skip((page - 1) * pageSize).Take(pageSize).Include(c => c.User)
             .ToListAsync(cancellationToken);
         return PageResult<ProductEntity>.Create(items, totalCount, page, pageSize);
